@@ -31,4 +31,28 @@ public class StockQuoteTest {
         assertEquals("Price in Dollars should be 12.34", "12.34", String.valueOf(stockQuote.getPriceInDollars()));
         assertEquals("Price in Cents should be 1234", 1234, stockQuote.getPriceInCents());
     }
+
+    /**
+     * Test that an Exception is thrown if a null company is passed.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testNullCompany(){
+        new StockQuote(null, 12.34f);
+    }
+
+    /**
+     * Test that an Exception is thrown if a negative value for price is passed.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testNegativePrice(){
+        new StockQuote("TEST", -12.34f);
+    }
+
+    /**
+     * Test that an Exception is thrown if a too large value for price is passed.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testHugePrice(){
+        new StockQuote("TEST", Float.MAX_VALUE);
+    }
 }

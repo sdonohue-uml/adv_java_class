@@ -31,4 +31,12 @@ public class BasicStockServiceTest {
         assertNotNull("Get Quote should not return null", stockQuote);
         assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
     }
+
+    /**
+     * Test that an Exception is thrown if a null company is passed.
+     */
+    @Test (expected = IllegalArgumentException.class)
+    public void testNullCompany(){
+        basicStockService.getQuote(null);
+    }
 }

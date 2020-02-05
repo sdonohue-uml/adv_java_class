@@ -21,6 +21,12 @@ public class StockQuote {
      * @param priceInDollars The price of the stock to 2 decimal places
      */
     public StockQuote(String companySymbol, float priceInDollars){
+        if (companySymbol == null){
+            throw new IllegalArgumentException("Company Symbol may not be null");
+        }
+        if (priceInDollars < 0 || priceInDollars*100 > Integer.MAX_VALUE){
+            throw new IllegalArgumentException("Invalid price");
+        }
         this.companySymbol = companySymbol;
         this.priceInCents = (int)(priceInDollars * 100);
     }
