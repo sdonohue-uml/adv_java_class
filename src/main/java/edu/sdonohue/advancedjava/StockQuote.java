@@ -1,34 +1,43 @@
 package edu.sdonohue.advancedjava;
 
+import java.util.Date;
+
 /**
- * Class for holding the current price of a share of stock
+ * Class for holding the price of a share of stock on a given date.
  *
  * @author Sean Donohue
- * @version 1.0
+ * @version 1.1
  */
 public class StockQuote {
     //Store the price as an integer for more precise calculations
     private final int priceInCents;
     //The stock market symbol of the company
     private final String companySymbol;
+    //The date the stock was that price;
+    private final Date date;
 
     /**
-     * Constructs a StockQuote with the given company stock market symbol
-     * and the price in dollars and cents as a float. Any extra digits beyond
-     * 2 decimal places in the price will be ignored.
-     *
-     * @param companySymbol The stock market symbol of the company
+     * Constructs a StockQuote with the given company stock market symbol,
+     * the price in dollars and cents as a float, and the date the price
+     * quote is for. Any extra digits beyond 2 decimal places in the price
+     * will be ignored.
+     *  @param companySymbol The stock market symbol of the company
      * @param priceInDollars The price of the stock to 2 decimal places
+     * @param date The date the price quote is for.
      */
-    public StockQuote(String companySymbol, float priceInDollars){
+    public StockQuote(String companySymbol, float priceInDollars, Date date){
         if (companySymbol == null){
-            throw new IllegalArgumentException("Company Symbol may not be null");
+            throw new NullPointerException("Company Symbol may not be null");
         }
         if (priceInDollars < 0 || priceInDollars*100 > Integer.MAX_VALUE){
             throw new IllegalArgumentException("Invalid price");
         }
+        if (date == null){
+            throw new NullPointerException("Date may not be null");
+        }
         this.companySymbol = companySymbol;
         this.priceInCents = (int)(priceInDollars * 100);
+        this.date = new Date(date.getTime());
     }
 
     /**
@@ -56,6 +65,33 @@ public class StockQuote {
      */
     public String getCompanySymbol(){
         return companySymbol;
+    }
+
+    /**
+     * Get the date that the price quote was for.
+     *
+     * @return The date of the quote
+     */
+    public Date getDate(){
+        return new Date(date.getTime());
+    }
+
+    /**
+     * Get a string representation of the StockQuote for output
+     * or troubleshooting. Contains the company symbol, the date,
+     * and the price.
+     *
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString(){
+        StringBuilder stringBuilder = new StringBuilder("StockQuote for ");
+        stringBuilder.append(getCompanySymbol());
+        stringBuilder.append(" on ");
+        stringBuilder.append(getDate().toString());
+        stringBuilder.append(" = $");
+        stringBuilder.append(getPriceInDollars());
+        return stringBuilder.toString();
     }
 
 }
