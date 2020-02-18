@@ -4,6 +4,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Defines the interface for services that will return StockQuotes
@@ -42,16 +46,40 @@ public interface StockService {
         TWICE_DAILY(12),
         DAILY(24);
 
+        //The length of the interval in hours
         private final int hours;
+        //Lookup for finding the interval that matches a number of hours
+        private static final Map<Integer, IntervalEnum> hoursToInterval = Stream.of(values()).collect(
+                Collectors.toMap(IntervalEnum::getHours, e -> e));
 
         IntervalEnum(int hours){
             this.hours = hours;
         }
 
+        /**
+         * Get the number of hours in the interval.
+         *
+         * @return The length of the interval in hours
+         */
         public int getHours(){
             return hours;
         }
 
+        /**
+         * Convert a number of hours into an Optional that contains the matching IntervalEnum
+         * if it exists, or an empty Optional otherwise.
+         * @param hours The length of the interval in hours
+         * @return An Optional of IntervalEnum
+         */
+        @NotNull
+        public static Optional<IntervalEnum> fromHours(int hours){
+            return Optional.ofNullable(hoursToInterval.get(hours));
+        }
+
+        /**
+         * @inheritDoc
+         *
+         */
         @Override
         public String toString(){
             return "Every " + hours + " hours";

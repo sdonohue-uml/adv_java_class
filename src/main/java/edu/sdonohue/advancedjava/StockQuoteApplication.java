@@ -19,13 +19,20 @@ public class StockQuoteApplication {
     /**
      * The main method for StockQuoteApplication that returns the requested StockQuotes.
      * The first parameter is required and is the stock market symbol of the company the
-     * quote(s) will be for. (e.g. APPL) The second and third optional parameters are the
-     * start and end dates of a date range in the format MM/dd/yyyy (e.g. 12/31/2019).
-     * A StockQuote will be returned for each date in the specified range, inclusive of
-     * the start and end dates.
+     * quote(s) will be for. (e.g. APPL)
+     * The second and third optional parameters are the start and end dates of a date range
+     * in the format MM/dd/yyyy (e.g. 12/31/2019). If the second argument is included, the
+     * third must also be included.
+     * The fourth argument is optional and should be an integer matching the hours between
+     * each StockQuote. Valid values are 1, 12, or 24. Default = 24. Invalid numbers are ignored.
+     * If only the symbol is passed, the StockQuote for the current time is returned. If the
+     * start and end dates are included, a StockQuote will be returned for each day in the range.
+     * If an interval is included, a StockQuote will be returned for 12:00am on the start date
+     * and for each interval after that until inclusive of 12:00am on the end date.
      *
      * @param args Required: company symbol (e.g. APPL),
      *             Optional: start date, end date (e.g. 01/01/2019 12/31/2019)
+     *             Optional: interval in hours (1, 12, or 24)
      */
     public static void main(String[] args) {
         //Make sure we have the right number of arguments
@@ -33,7 +40,7 @@ public class StockQuoteApplication {
             throw new NullPointerException("No arguments. Company symbol is required.");
         } else if (args.length == 2){
             throw new NullPointerException("If the start date is included, the end date is required");
-        } else if (args.length > 3){
+        } else if (args.length > 4){
             throw new IllegalArgumentException("Too many arguments.");
         }
 
@@ -42,8 +49,8 @@ public class StockQuoteApplication {
             throw new NullPointerException("Company symbol is null or blank.");
         }
 
-        //We know we have either 1 or 3 arguments
-        if (args.length == 3){
+        //If we have 3 or 4 arguments
+        if (args.length >= 3){
             Calendar from = getCalendar(args[1]);
             Calendar until = getCalendar(args[2]);
             if (from.after(until)){
@@ -52,8 +59,17 @@ public class StockQuoteApplication {
             if (until.after(Calendar.getInstance())){
                 throw new IllegalArgumentException("The end date must not be after today.");
             }
-            getQuotes(symbol, from, until, IntervalEnum.DAILY);
-        } else {
+            IntervalEnum interval = IntervalEnum.DAILY;
+            if (args.length == 4){
+                try {
+                    int hours = Integer.parseInt(args[3]);
+                    interval = IntervalEnum.fromHours(hours).orElse(IntervalEnum.DAILY);
+                } catch (NumberFormatException e){
+                    throw new IllegalArgumentException("The interval must be a valid number from (1, 12, 24)", e);
+                }
+            }
+            getQuotes(symbol, from, until, interval);
+        } else { //1 argument
             getQuote(symbol);
         }
     }

@@ -15,7 +15,7 @@ public class StockQuoteApplicationTest {
      */
     @Test
     public void testMain(){
-        StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/05/2020"});
+        StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/05/2020", "12"});
     }
 
     /**
@@ -39,7 +39,7 @@ public class StockQuoteApplicationTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testMainTooManyArguments(){
-        StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/05/2020", "TRUE"});
+        StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/05/2020", "12", "TRUE"});
     }
 
     /**
@@ -72,5 +72,13 @@ public class StockQuoteApplicationTest {
     @Test(expected = IllegalArgumentException.class)
     public void testMainFutureDate(){
         StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/02/2021"});
+    }
+
+    /**
+     * Test that an Exception is thrown if a bad interval is passed.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testMainBadInterval(){
+        StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/05/2020", "TRUE"});
     }
 }
