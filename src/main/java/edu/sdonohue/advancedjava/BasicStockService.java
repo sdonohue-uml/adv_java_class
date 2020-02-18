@@ -1,6 +1,8 @@
 package edu.sdonohue.advancedjava;
 
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -18,7 +20,8 @@ public class BasicStockService implements StockService {
      * @inheritDoc
      */
     @Override
-    public StockQuote getQuote(String symbol) {
+    @Nullable
+    public StockQuote getQuote(@NotNull String symbol) {
         return generateQuote(symbol, Calendar.getInstance());
     }
 
@@ -32,7 +35,8 @@ public class BasicStockService implements StockService {
      */
     @Override
     @NotNull
-    public List<StockQuote> getQuote(String symbol, Calendar from, Calendar until, IntervalEnum interval) {
+    public List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
+                                     @NotNull IntervalEnum interval) {
         List<StockQuote> stocks = new LinkedList<>();
         for (Calendar timeOfQuote = (Calendar)from.clone(); !timeOfQuote.after(until);
              timeOfQuote.add(Calendar.HOUR_OF_DAY, interval.getHours())){

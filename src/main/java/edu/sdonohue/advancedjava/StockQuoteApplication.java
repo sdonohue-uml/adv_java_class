@@ -65,7 +65,7 @@ public class StockQuoteApplication {
                     int hours = Integer.parseInt(args[3]);
                     interval = IntervalEnum.fromHours(hours).orElse(IntervalEnum.DAILY);
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("The interval must be a valid number from (1, 12, 24)", e);
+                    throw new IllegalArgumentException("The interval must be a valid number of (1, 12, 24)", e);
                 }
             }
             getQuotes(symbol, from, until, interval);
