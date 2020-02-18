@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * Test class for unit tests of the StockQuote class.
  *
  * @author Sean Donohue
- * @version 1.1
+ * @version 1.2
  */
 public class StockQuoteTest {
     private StockQuote stockQuote;

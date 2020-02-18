@@ -1,5 +1,6 @@
 package edu.sdonohue.advancedjava;
 
+import edu.sdonohue.advancedjava.StockService.IntervalEnum;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
  * Test class for unit tests of the BasicStockService class.
  *
  * @author Sean Donohue
- * @version 1.1
+ * @version 1.2
  */
 public class BasicStockServiceTest {
     private BasicStockService basicStockService;
@@ -55,9 +56,24 @@ public class BasicStockServiceTest {
      */
     @Test
     public void testGetQuotes(){
-        List<StockQuote> stockQuotes = basicStockService.getQuote("TEST", testFrom, testUntil );
+        List<StockQuote> stockQuotes = basicStockService.getQuote("TEST", testFrom, testUntil, IntervalEnum.DAILY );
         assertNotNull("Get Quotes should not return null", stockQuotes);
-        assertEquals("Number of StockQuotes returned should be 3", 4, stockQuotes.size());
+        assertEquals("Number of StockQuotes returned should be 4", 4, stockQuotes.size());
+        for (StockQuote stockQuote : stockQuotes){
+            assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
+            boolean isBetween = !stockQuote.getDate().before(testFrom.getTime()) && !stockQuote.getDate().after(testUntil.getTime());
+            assertTrue("Date of StockQuote should be within the requested range", isBetween);
+        }
+    }
+
+    /**
+     * Tests that getQuote correctly returns a valid List of StockQuotes for each hour within a date range.
+     */
+    @Test
+    public void testGetQuotesHourly(){
+        List<StockQuote> stockQuotes = basicStockService.getQuote("TEST", testFrom, testUntil, IntervalEnum.HOURLY );
+        assertNotNull("Get Quotes should not return null", stockQuotes);
+        assertEquals("Number of StockQuotes returned should be 73", 73, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
             assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
             boolean isBetween = !stockQuote.getDate().before(testFrom.getTime()) && !stockQuote.getDate().after(testUntil.getTime());

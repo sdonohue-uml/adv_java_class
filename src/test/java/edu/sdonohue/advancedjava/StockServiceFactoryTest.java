@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
  * Test class for unit tests of the StockServiceFactory class.
  *
  * @author Sean Donohue
- * @version 1.0
+ * @version 1.2
  */
 public class StockServiceFactoryTest {
 

@@ -1,5 +1,7 @@
 package edu.sdonohue.advancedjava;
 
+import edu.sdonohue.advancedjava.StockService.IntervalEnum;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,13 +12,12 @@ import java.util.List;
  * An application that retrieves StockQuotes for a given company.
  *
  * @author Sean Donohue
- * @version 1.0
+ * @version 1.2
  */
 public class StockQuoteApplication {
 
     /**
      * The main method for StockQuoteApplication that returns the requested StockQuotes.
-     * Accepts exactly 1 or 3 parameters:
      * The first parameter is required and is the stock market symbol of the company the
      * quote(s) will be for. (e.g. APPL) The second and third optional parameters are the
      * start and end dates of a date range in the format MM/dd/yyyy (e.g. 12/31/2019).
@@ -51,7 +52,7 @@ public class StockQuoteApplication {
             if (until.after(Calendar.getInstance())){
                 throw new IllegalArgumentException("The end date must not be after today.");
             }
-            getQuotes(symbol, from, until);
+            getQuotes(symbol, from, until, IntervalEnum.DAILY);
         } else {
             getQuote(symbol);
         }
@@ -77,8 +78,8 @@ public class StockQuoteApplication {
     }
 
     //Output the list of StockQuotes for the given company within the given date range.
-    private static void getQuotes(String symbol, Calendar from, Calendar until){
-        List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, from, until);
+    private static void getQuotes(String symbol, Calendar from, Calendar until, IntervalEnum interval){
+        List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, from, until, interval);
         for (StockQuote quote : quotes){
             System.out.println(quote);
         }

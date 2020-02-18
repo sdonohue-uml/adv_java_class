@@ -6,7 +6,7 @@ import org.junit.Test;
  * Test class for unit tests of the StockQuoteApplication class.
  *
  * @author Sean Donohue
- * @version 1.0
+ * @version 1.2
  */
 public class StockQuoteApplicationTest {
 

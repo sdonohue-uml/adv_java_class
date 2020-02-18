@@ -1,10 +1,13 @@
 package edu.sdonohue.advancedjava;
 
+
+import javax.validation.constraints.NotNull;
+
 /**
  * Factory class for creating instances of StockService
  *
  * @author Sean Donohue
- * @version 1.0
+ * @version 1.2
  */
 public class StockServiceFactory {
 
@@ -13,6 +16,7 @@ public class StockServiceFactory {
      *
      * @return A instance of StockService
      */
+    @NotNull
     public static StockService getStockService(){
         return new BasicStockService();
     }

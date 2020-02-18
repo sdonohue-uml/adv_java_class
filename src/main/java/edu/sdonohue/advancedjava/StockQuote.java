@@ -1,13 +1,19 @@
 package edu.sdonohue.advancedjava;
 
+
+
+import jdk.nashorn.internal.ir.annotations.Immutable;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
  * Class for holding the price of a share of stock on a given date.
  *
  * @author Sean Donohue
- * @version 1.1
+ * @version 1.2
  */
+@Immutable
 public class StockQuote {
     //Store the price as an integer for more precise calculations
     private final int priceInCents;
@@ -25,7 +31,7 @@ public class StockQuote {
      * @param priceInDollars The price of the stock to 2 decimal places
      * @param date The date the price quote is for.
      */
-    public StockQuote(String companySymbol, float priceInDollars, Date date){
+    public StockQuote(@NotNull String companySymbol, float priceInDollars, @NotNull Date date){
         if (companySymbol == null){
             throw new NullPointerException("Company Symbol may not be null");
         }
@@ -63,6 +69,7 @@ public class StockQuote {
      *
      * @return The company stock market symbol
      */
+    @NotNull
     public String getCompanySymbol(){
         return companySymbol;
     }
@@ -72,6 +79,7 @@ public class StockQuote {
      *
      * @return The date of the quote
      */
+    @NotNull
     public Date getDate(){
         return new Date(date.getTime());
     }
