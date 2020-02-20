@@ -5,6 +5,8 @@ package edu.sdonohue.advancedjava;
 import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -20,7 +22,7 @@ public class StockQuote {
     //The stock market symbol of the company
     private final String companySymbol;
     //The date the stock was that price;
-    private final Date date;
+    private final LocalDateTime date;
 
     /**
      * Constructs a StockQuote with the given company stock market symbol,
@@ -31,7 +33,7 @@ public class StockQuote {
      * @param priceInDollars The price of the stock to 2 decimal places
      * @param date The date the price quote is for.
      */
-    public StockQuote(@NotNull String companySymbol, float priceInDollars, @NotNull Date date){
+    public StockQuote(@NotNull String companySymbol, float priceInDollars, @NotNull LocalDateTime date){
         if (companySymbol == null){
             throw new NullPointerException("Company Symbol may not be null");
         }
@@ -43,7 +45,7 @@ public class StockQuote {
         }
         this.companySymbol = companySymbol;
         this.priceInCents = (int)(priceInDollars * 100);
-        this.date = new Date(date.getTime());
+        this.date = LocalDateTime.from(date);
     }
 
     /**
@@ -80,8 +82,8 @@ public class StockQuote {
      * @return The date of the quote
      */
     @NotNull
-    public Date getDate(){
-        return new Date(date.getTime());
+    public LocalDateTime getDate(){
+        return LocalDateTime.from(date);
     }
 
     /**
@@ -96,7 +98,7 @@ public class StockQuote {
         StringBuilder stringBuilder = new StringBuilder("StockQuote for ");
         stringBuilder.append(getCompanySymbol());
         stringBuilder.append(" on ");
-        stringBuilder.append(getDate().toString());
+        stringBuilder.append(getDate().format(DateTimeFormatter.ofPattern("MM/dd/uuuu HH:mm:ss")));
         stringBuilder.append(" = $");
         stringBuilder.append(getPriceInDollars());
         return stringBuilder.toString();

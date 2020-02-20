@@ -4,6 +4,8 @@ package edu.sdonohue.advancedjava;
 import org.jetbrains.annotations.Nullable;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,11 +27,6 @@ public class BasicStockService implements StockService {
         return generateQuote(symbol, Calendar.getInstance());
     }
 
-    //Utility method for generating StockQuotes for testing
-    private StockQuote generateQuote(String symbol, Calendar date){
-        return new StockQuote(symbol, 12.34f, date.getTime());
-    }
-
     /**
      * @inheritDoc
      */
@@ -43,5 +40,14 @@ public class BasicStockService implements StockService {
             stocks.add(generateQuote(symbol, timeOfQuote));
         }
         return stocks;
+    }
+
+    //Utility method for generating StockQuotes for testing
+    private StockQuote generateQuote(String symbol, Calendar date){
+        LocalDateTime dateAsLDT = LocalDateTime.now();
+        if (date != null){
+            dateAsLDT = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        }
+        return new StockQuote(symbol, 12.34f, dateAsLDT);
     }
 }

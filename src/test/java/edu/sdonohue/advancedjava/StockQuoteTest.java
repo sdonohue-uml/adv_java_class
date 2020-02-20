@@ -3,9 +3,8 @@ package edu.sdonohue.advancedjava;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,18 +16,14 @@ import static org.junit.Assert.assertEquals;
  */
 public class StockQuoteTest {
     private StockQuote stockQuote;
-    private Date testDate;
+    private LocalDateTime testDate; // 1/2/2020
 
     /**
      * Set up to initialize each test. Creates a StockQuote with hardcoded values.
      */
     @Before
     public void setup(){
-        try {
-            testDate = new SimpleDateFormat("MM/dd/yyyy").parse("01/02/2020");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        testDate = LocalDateTime.of(2020, Month.JANUARY, 2, 0 , 0);
         stockQuote = new StockQuote("TEST", 12.34f, testDate);
     }
 
@@ -40,7 +35,7 @@ public class StockQuoteTest {
         assertEquals("Company Symbol should eqaul TEST", "TEST", stockQuote.getCompanySymbol());
         assertEquals("Price in Dollars should be 12.34", "12.34", String.valueOf(stockQuote.getPriceInDollars()));
         assertEquals("Price in Cents should be 1234", 1234, stockQuote.getPriceInCents());
-        assertEquals("Date should be today", testDate, stockQuote.getDate());
+        assertEquals("Date should be 1/2/2020", testDate, stockQuote.getDate());
     }
 
     /**

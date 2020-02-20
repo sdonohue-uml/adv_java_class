@@ -2,10 +2,10 @@ package edu.sdonohue.advancedjava;
 
 import edu.sdonohue.advancedjava.StockService.IntervalEnum;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -76,14 +76,16 @@ public class StockQuoteApplication {
 
     //Utility method for turning a date string argument into a Calendar instance.
     private static Calendar getCalendar(String dateString) {
-        Date date = null;
-        try {
-            date = new SimpleDateFormat("MM/dd/yyyy").parse(dateString);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Argument is not a valid date", e);
-        }
+        LocalDate date = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.clear();
+        try {
+            date = LocalDate.parse(dateString, formatter);
+            calendar.set(date.getYear(), date.getMonthValue()-1, date.getDayOfMonth());
+        } catch (DateTimeParseException e){
+            throw new IllegalArgumentException(dateString + " is not a valid date");
+        }
         return calendar;
     }
 
