@@ -91,15 +91,24 @@ public class StockQuoteApplication {
 
     //Output the StockQuote for today for the given company
     private static void getQuote(String symbol){
-        StockQuote quote = StockServiceFactory.getStockService().getQuote(symbol);
+        StockQuote quote = null;
+        try {
+            quote = StockServiceFactory.getStockService().getQuote(symbol);
+        } catch (StockServiceException e) {
+            e.printStackTrace();
+        }
         System.out.println(quote);
     }
 
     //Output the list of StockQuotes for the given company within the given date range.
     private static void getQuotes(String symbol, Calendar from, Calendar until, IntervalEnum interval){
-        List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, from, until, interval);
-        for (StockQuote quote : quotes){
-            System.out.println(quote);
+        try {
+            List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, from, until, interval);
+            for (StockQuote quote : quotes){
+                System.out.println(quote);
+            }
+        } catch (StockServiceException e) {
+            e.printStackTrace();
         }
     }
 

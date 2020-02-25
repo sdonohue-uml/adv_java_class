@@ -23,7 +23,7 @@ public interface StockService {
      * @return a <CODE>StockQuote </CODE> instance
      */
     @Nullable
-    StockQuote getQuote(@NotNull String symbol);
+    StockQuote getQuote(@NotNull String symbol) throws StockServiceException;
 
     /**
      * Get a historical list of stock quotes for the provided symbol
@@ -36,7 +36,7 @@ public interface StockService {
      */
     @NotNull
     List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
-                              @NotNull IntervalEnum interval);
+                              @NotNull IntervalEnum interval) throws StockServiceException;
 
     /**
      * Enumeration of the valid intervals between StockQuotes
