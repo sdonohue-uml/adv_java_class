@@ -4,6 +4,7 @@ package edu.sdonohue.advancedjava;
 import org.jetbrains.annotations.Nullable;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
@@ -35,8 +36,7 @@ public class BasicStockService implements StockService {
     public List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
                                      @NotNull IntervalEnum interval) {
         List<StockQuote> stocks = new LinkedList<>();
-        for (Calendar timeOfQuote = (Calendar)from.clone(); !timeOfQuote.after(until);
-             timeOfQuote.add(Calendar.HOUR_OF_DAY, interval.getHours())){
+        for (Calendar timeOfQuote = (Calendar)from.clone(); !timeOfQuote.after(until); interval.advance(timeOfQuote)){
             stocks.add(generateQuote(symbol, timeOfQuote));
         }
         return stocks;
@@ -48,6 +48,6 @@ public class BasicStockService implements StockService {
         if (date != null){
             dateAsLDT = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
         }
-        return new StockQuote(symbol, 12.34f, dateAsLDT);
+        return new StockQuote(symbol,new BigDecimal("12.34"), dateAsLDT);
     }
 }

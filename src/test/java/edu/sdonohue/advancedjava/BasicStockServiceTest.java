@@ -19,8 +19,8 @@ import static org.junit.Assert.*;
  */
 public class BasicStockServiceTest {
     private BasicStockService basicStockService;
-    private Calendar from; // 1/2/2020
-    private Calendar until; // 1/5/2020
+    private Calendar from; // 1/1/2019
+    private Calendar until; // 12/31/2019
 
     /**
      * Set up to initialized each test. Creates a BasicStockService.
@@ -30,10 +30,10 @@ public class BasicStockServiceTest {
         basicStockService = new BasicStockService();
         from = Calendar.getInstance();
         from.clear();
-        from.set(2020, Calendar.JANUARY, 2);
+        from.set(2019, Calendar.JANUARY, 1);
         until = Calendar.getInstance();
         until.clear();
-        until.set(2020, Calendar.JANUARY, 5);
+        until.set(2020, Calendar.JANUARY, 1);
     }
 
     /**
@@ -46,14 +46,10 @@ public class BasicStockServiceTest {
         assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
     }
 
-    /**
-     * Tests that getQuote correctly returns a valid List of StockQuotes in a date range.
-     */
-    @Test
-    public void testGetQuotes(){
-        List<StockQuote> stockQuotes = basicStockService.getQuote("TEST", from, until, IntervalEnum.DAILY );
+    private void testGetQuotes(IntervalEnum interval, int expectedNumQuotes){
+        List<StockQuote> stockQuotes = basicStockService.getQuote("TEST", from, until, interval);
         assertNotNull("Get Quotes should not return null", stockQuotes);
-        assertEquals("Number of StockQuotes returned should be 4", 4, stockQuotes.size());
+        assertEquals("Number of StockQuotes returned should be " + expectedNumQuotes, expectedNumQuotes, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
             assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
             boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
@@ -62,18 +58,35 @@ public class BasicStockServiceTest {
     }
 
     /**
-     * Tests that getQuote correctly returns a valid List of StockQuotes for each hour within a date range.
+     * Tests that getQuote correctly returns a valid List of hourly StockQuotes in a date range.
      */
     @Test
     public void testGetQuotesHourly(){
-        List<StockQuote> stockQuotes = basicStockService.getQuote("TEST", from, until, IntervalEnum.HOURLY );
-        assertNotNull("Get Quotes should not return null", stockQuotes);
-        assertEquals("Number of StockQuotes returned should be 73", 73, stockQuotes.size());
-        for (StockQuote stockQuote : stockQuotes){
-            assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
-            boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
-            assertTrue("Date of StockQuote should be within the requested range", isBetween);
-        }
+        testGetQuotes(IntervalEnum.HOURLY, 8761);
+    }
+
+    /**
+     * Tests that getQuote correctly returns a valid List of daily StockQuotes in a date range.
+     */
+    @Test
+    public void testGetQuotesDaily(){
+        testGetQuotes(IntervalEnum.DAILY, 366);
+    }
+
+    /**
+     * Tests that getQuote correctly returns a valid List of monthly StockQuotes in a date range.
+     */
+    @Test
+    public void testGetQuotesMonthly(){
+        testGetQuotes(IntervalEnum.MONTHLY, 13);
+    }
+
+    /**
+     * Tests that getQuote correctly returns a valid List of annual StockQuotes in a date range.
+     */
+    @Test
+    public void testGetQuotesAnnually(){
+        testGetQuotes(IntervalEnum.ANNUALLY, 2);
     }
 
     /**

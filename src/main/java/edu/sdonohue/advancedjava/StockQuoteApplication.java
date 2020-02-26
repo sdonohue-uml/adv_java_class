@@ -23,16 +23,18 @@ public class StockQuoteApplication {
      * The second and third optional parameters are the start and end dates of a date range
      * in the format MM/dd/yyyy (e.g. 12/31/2019). If the second argument is included, the
      * third must also be included.
-     * The fourth argument is optional and should be an integer matching the hours between
-     * each StockQuote. Valid values are 1, 12, or 24. Default = 24. Invalid numbers are ignored.
+     * The fourth argument is optional and should be an string representing the desired interval
+     * to return quotes for within the start and end dates. Valid options are limited to:
+     * "HOURLY", "DAILY", "WEEKLY", "BI_WEEKLY", "MONTHLY",
+     * "BI_MONTHLY", "SEMI_ANNUALLY", "ANNUALLY", "BI_ANNUALLY".
      * If only the symbol is passed, the StockQuote for the current time is returned. If the
      * start and end dates are included, a StockQuote will be returned for each day in the range.
      * If an interval is included, a StockQuote will be returned for 12:00am on the start date
      * and for each interval after that until inclusive of 12:00am on the end date.
      *
-     * @param args Required: company symbol (e.g. APPL),
+     * @param args Required: company symbol (e.g. APPL)
      *             Optional: start date, end date (e.g. 01/01/2019 12/31/2019)
-     *             Optional: interval in hours (1, 12, or 24)
+     *             Optional: interval (e.g. DAILY)
      */
     public static void main(String[] args) {
         //Make sure we have the right number of arguments
@@ -62,10 +64,9 @@ public class StockQuoteApplication {
             IntervalEnum interval = IntervalEnum.DAILY;
             if (args.length == 4){
                 try {
-                    int hours = Integer.parseInt(args[3]);
-                    interval = IntervalEnum.fromHours(hours).orElse(IntervalEnum.DAILY);
-                } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("The interval must be a valid number of (1, 12, 24)", e);
+                    interval = IntervalEnum.valueOf(args[3]);
+                } catch (IllegalArgumentException e){
+                    throw new IllegalArgumentException("The entered interval is invalid", e);
                 }
             }
             getQuotes(symbol, from, until, interval);

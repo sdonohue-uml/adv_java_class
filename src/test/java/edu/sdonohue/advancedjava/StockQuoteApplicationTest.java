@@ -15,7 +15,7 @@ public class StockQuoteApplicationTest {
      */
     @Test
     public void testMain(){
-        StockQuoteApplication.main(new String[]{"TEST", "01/02/2020", "01/05/2020", "12"});
+        StockQuoteApplication.main(new String[]{"GOOG", "01/02/2010", "01/05/2020", "12"});
     }
 
     /**

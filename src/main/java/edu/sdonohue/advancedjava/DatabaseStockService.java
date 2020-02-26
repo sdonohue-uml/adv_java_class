@@ -4,11 +4,7 @@ import edu.sdonohue.advancedjava.database.DatabaseConnectionException;
 import edu.sdonohue.advancedjava.database.DatabaseUtils;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -34,38 +30,59 @@ public class DatabaseStockService implements StockService {
      */
     @Override
     public StockQuote getQuote(String symbol) throws StockServiceException {
-        // todo - this is a pretty lame implementation why?
-        List<StockQuote> stockQuotes = null;
         try {
             Connection connection = DatabaseUtils.getConnection();
-            Statement statement = connection.createStatement();
-            String queryString = "select * from quotes where symbol = '" + symbol + "'";
-
-            ResultSet resultSet = statement.executeQuery(queryString);
-            stockQuotes = new ArrayList<>(resultSet.getFetchSize());
-            while(resultSet.next()) {
-                String symbolValue = resultSet.getString("symbol");
+            String queryString = "SELECT * FROM stocks.quotes " +
+                    "WHERE symbol like ? " +
+                    "ORDER BY time DESC " +
+                    "LIMIT 1";
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, symbol);
+            ResultSet resultSet = statement.executeQuery();
+            List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
+            if (resultSet.first()) {
                 Date time = resultSet.getDate("time");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(time);
-                // oops!
-                float price = resultSet.getFloat("price");
-                stockQuotes.add(new StockQuote(symbolValue, price,
+                BigDecimal price = resultSet.getBigDecimal("price");
+                stockQuotes.add(new StockQuote(symbol, price,
                         LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())));
+                if (stockQuotes.isEmpty()) {
+                    throw new StockServiceException("There is no stock data for:" + symbol);
+                }
+                return stockQuotes.get(0);
             }
-
         } catch (DatabaseConnectionException | SQLException exception) {
             throw new StockServiceException(exception.getMessage(), exception);
         }
-        if (stockQuotes.isEmpty()) {
-            throw new StockServiceException("There is no stock data for:" + symbol);
-        }
-        return stockQuotes.get(0);
+
+        return null;
     }
 
     @Override
     public List<StockQuote> getQuote(String symbol, Calendar from, Calendar until, IntervalEnum interval) throws StockServiceException {
-        return null;
+        try {
+            Connection connection = DatabaseUtils.getConnection();
+            String queryString = "select * from quotes where symbol = ?";
+            PreparedStatement statement = connection.prepareStatement(queryString);
+            statement.setString(1, symbol);
+            ResultSet resultSet = statement.executeQuery();
+            List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
+            while(resultSet.next()) {
+                Date time = resultSet.getDate("time");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(time);
+                BigDecimal price = resultSet.getBigDecimal("price");
+                stockQuotes.add(new StockQuote(symbol, price,
+                        LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())));
+            }
+            if (stockQuotes.isEmpty()) {
+                throw new StockServiceException("There is no stock data for:" + symbol);
+            }
+            return stockQuotes;
+        } catch (DatabaseConnectionException | SQLException exception) {
+            throw new StockServiceException(exception.getMessage(), exception);
+        }
     }
 
 
