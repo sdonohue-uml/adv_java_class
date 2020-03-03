@@ -1,5 +1,9 @@
 package edu.sdonohue.advancedjava;
 
+import edu.sdonohue.advancedjava.database.DatabaseStockService;
+import edu.sdonohue.advancedjava.stocks.StockQuote;
+import edu.sdonohue.advancedjava.stocks.StockService;
+import edu.sdonohue.advancedjava.stocks.StockServiceException;
 import org.junit.Before;
 import org.junit.Test;
 

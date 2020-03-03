@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava;
+package edu.sdonohue.advancedjava.stocks;
 
 
 

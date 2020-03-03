@@ -1,11 +1,16 @@
-package edu.sdonohue.advancedjava;
+package edu.sdonohue.advancedjava.database;
 
 import edu.sdonohue.advancedjava.database.DatabaseConnectionException;
 import edu.sdonohue.advancedjava.database.DatabaseUtils;
+import edu.sdonohue.advancedjava.stocks.StockQuote;
+import edu.sdonohue.advancedjava.stocks.StockService;
+import edu.sdonohue.advancedjava.stocks.StockServiceException;
+import org.jetbrains.annotations.Nullable;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -19,17 +24,11 @@ import java.util.List;
 public class DatabaseStockService implements StockService {
 
     /**
-     * Return the current price for a share of stock  for the given symbol
-     *
-     * @param symbol the stock symbol of the company you want a quote for.
-     *               e.g. APPL for APPLE
-     * @return a  <CODE>BigDecimal</CODE> instance
-     * @throws StockServiceException if using the service generates an exception.
-     *                               If this happens, trying the service may work, depending on the actual cause of the
-     *                               error.
+     * @inheritDoc
      */
     @Override
-    public StockQuote getQuote(String symbol) throws StockServiceException {
+    @Nullable
+    public StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
         try {
             Connection connection = DatabaseUtils.getConnection();
             String queryString = "SELECT * FROM stocks.quotes " +
@@ -59,13 +58,25 @@ public class DatabaseStockService implements StockService {
         return null;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
-    public List<StockQuote> getQuote(String symbol, Calendar from, Calendar until, IntervalEnum interval) throws StockServiceException {
+    @NotNull
+    public List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
+                                     @NotNull IntervalEnum interval) throws StockServiceException {
         try {
             Connection connection = DatabaseUtils.getConnection();
-            String queryString = "select * from quotes where symbol = ?";
+            String queryString = "SELECT * FROM stocks.quotes " +
+                    "WHERE symbol like ? and time >= ? and time <= ? " +
+                    "ORDER BY time ASC";
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, symbol);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            System.out.println("from = " + dateFormat.format(from.getTime()));
+            System.out.println("until = " + dateFormat.format(until.getTime()));
+            statement.setString(2, dateFormat.format(from.getTime()));
+            statement.setString(3, dateFormat.format(until.getTime()));
             ResultSet resultSet = statement.executeQuery();
             List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
             while(resultSet.next()) {

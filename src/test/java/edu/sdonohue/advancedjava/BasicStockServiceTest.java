@@ -1,6 +1,8 @@
 package edu.sdonohue.advancedjava;
 
-import edu.sdonohue.advancedjava.StockService.IntervalEnum;
+import edu.sdonohue.advancedjava.stocks.StockService.IntervalEnum;
+import edu.sdonohue.advancedjava.stocks.BasicStockService;
+import edu.sdonohue.advancedjava.stocks.StockQuote;
 import org.junit.Before;
 import org.junit.Test;
 

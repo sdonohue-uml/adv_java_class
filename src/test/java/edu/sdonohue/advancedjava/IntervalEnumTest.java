@@ -1,6 +1,6 @@
 package edu.sdonohue.advancedjava;
 
-import edu.sdonohue.advancedjava.StockService.IntervalEnum;
+import edu.sdonohue.advancedjava.stocks.StockService.IntervalEnum;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 

@@ -1,5 +1,6 @@
 package edu.sdonohue.advancedjava;
 
+import edu.sdonohue.advancedjava.stocks.StockQuote;
 import org.junit.Before;
 import org.junit.Test;
 

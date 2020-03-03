@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava;
+package edu.sdonohue.advancedjava.stocks;
 
 /**
  * Used to signal a problem with the StockService.
