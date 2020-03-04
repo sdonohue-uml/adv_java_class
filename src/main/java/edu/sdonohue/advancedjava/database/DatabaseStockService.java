@@ -80,8 +80,6 @@ public class DatabaseStockService implements StockService {
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, symbol);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            System.out.println("from = " + dateFormat.format(from.getTime()));
-            System.out.println("until = " + dateFormat.format(until.getTime()));
             statement.setString(2, dateFormat.format(from.getTime()));
             statement.setString(3, symbol);
             statement.setString(4, dateFormat.format(from.getTime()));
@@ -107,6 +105,7 @@ public class DatabaseStockService implements StockService {
         }
     }
 
+    //Takes a list of raw quotes from the source and creates a new list of quotes across each interval
     private List<StockQuote> getListByInterval(List<StockQuote> rawQuotes, Calendar from, Calendar until, IntervalEnum interval){
         List<StockQuote> listByInterval = new ArrayList<>();
         StockQuote previousRecord = null;
@@ -123,7 +122,8 @@ public class DatabaseStockService implements StockService {
                     currentRecord = null;
                 }
             }
-            listByInterval.add(previousRecord);
+            listByInterval.add(new StockQuote(previousRecord.getCompanySymbol(), previousRecord.getPrice(),
+                    asLocalDateTime(timeOfQuote)));
         }
 
         return listByInterval;

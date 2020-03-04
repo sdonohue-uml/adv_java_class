@@ -70,6 +70,17 @@ public interface StockService {
             startDate.add(datePart, quantity);
             return startDate;
         }
+
+        /**
+         * Returns a print friendly name by returning toString() in proper case.
+         *
+         * @return The name of the interval in proper case
+         */
+        @Override
+        public String toString(){
+            String name = name();
+            return name.substring(0,1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
+        }
     }
 }
 

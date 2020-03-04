@@ -5,6 +5,7 @@ import edu.sdonohue.advancedjava.stocks.StockQuote;
 import edu.sdonohue.advancedjava.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.stocks.StockServiceFactory;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -109,6 +110,12 @@ public class StockQuoteApplication {
     private static void getQuotes(String symbol, Calendar from, Calendar until, IntervalEnum interval){
         try {
             List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, from, until, interval);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            StringBuilder header = new StringBuilder(interval.toString()).append(" stock prices for ").append(symbol)
+                    .append(" between ").append(dateFormat.format(from.getTime()))
+                    .append(" and ").append(dateFormat.format(until.getTime()));
+            System.out.println(header.toString());
+            System.out.println("--------------------------------------------------------------------------------");
             for (StockQuote quote : quotes){
                 System.out.println(quote);
             }
