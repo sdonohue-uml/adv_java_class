@@ -25,8 +25,11 @@ public class DatabaseStockService implements StockService {
      * @inheritDoc
      */
     @Override
-    @Nullable
+    @NotNull
     public StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
+        if (symbol == null){
+            throw new NullPointerException("Compnay symbol must not be null");
+        }
         try {
             Connection connection = DatabaseUtils.getConnection();
             String queryString = new StringBuilder()
@@ -46,16 +49,14 @@ public class DatabaseStockService implements StockService {
                 BigDecimal price = resultSet.getBigDecimal("price");
                 stockQuotes.add(new StockQuote(symbol, price,
                         LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())));
-                if (stockQuotes.isEmpty()) {
-                    throw new StockServiceException("There is no stock data for:" + symbol);
-                }
-                return stockQuotes.get(0);
             }
+            if (stockQuotes.isEmpty()) {
+                throw new StockServiceException("There is no stock data for: " + symbol);
+            }
+            return stockQuotes.get(0);
         } catch (DatabaseConnectionException | SQLException exception) {
             throw new StockServiceException(exception.getMessage(), exception);
         }
-
-        return null;
     }
 
     /**
@@ -105,7 +106,7 @@ public class DatabaseStockService implements StockService {
         }
     }
 
-    //Takes a list of raw quotes from the source and creates a new list of quotes across each interval
+    //Takes a list of raw quotes from the source and creates a new list of quotes, one for each interval
     private List<StockQuote> getListByInterval(List<StockQuote> rawQuotes, Calendar from, Calendar until, IntervalEnum interval){
         List<StockQuote> listByInterval = new ArrayList<>();
         StockQuote previousRecord = null;
@@ -131,7 +132,6 @@ public class DatabaseStockService implements StockService {
 
     //converts Calendar to LocalDateTime
     private LocalDateTime asLocalDateTime(@NotNull Calendar calendar){
-        LocalDateTime dateAsLDT = LocalDateTime.now();
         return LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
     }
 }

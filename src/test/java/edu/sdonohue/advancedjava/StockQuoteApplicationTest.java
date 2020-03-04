@@ -15,7 +15,9 @@ public class StockQuoteApplicationTest {
      */
     @Test
     public void testMain(){
-        StockQuoteApplication.main(new String[]{"GOOG", "01/02/2010", "01/05/2020", "12"});
+        StockQuoteApplication.main(new String[]{"GOOG", "01/02/2010", "01/05/2020", "HOURLY"});
+        StockQuoteApplication.main(new String[]{"GOOG", "01/02/2010", "01/05/2020"});
+        StockQuoteApplication.main(new String[]{"GOOG"});
     }
 
     /**
@@ -43,7 +45,7 @@ public class StockQuoteApplicationTest {
     }
 
     /**
-     * Test that an Exception is thrown if too many arguments are passed.
+     * Test that an Exception is thrown if an empty company symbol is passed.
      */
     @Test(expected = NullPointerException.class)
     public void testMainBlankCompany(){

@@ -68,11 +68,11 @@ public class DatabaseStockServiceTest {
      */
     @Test
     public void testGetQuotesHourly() throws StockServiceException {
-        List<StockQuote> stockQuotes = databaseStockService.getQuote("TEST", from, until, StockService.IntervalEnum.HOURLY );
+        List<StockQuote> stockQuotes = databaseStockService.getQuote("AMZN", from, until, StockService.IntervalEnum.HOURLY );
         assertNotNull("Get Quotes should not return null", stockQuotes);
         assertEquals("Number of StockQuotes returned should be 73", 73, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
-            assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
+            assertEquals("GetQuote should return a StockQuote for the requested company", "AMZN", stockQuote.getCompanySymbol());
             boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
             assertTrue("Date of StockQuote should be within the requested range", isBetween);
         }
@@ -84,6 +84,14 @@ public class DatabaseStockServiceTest {
     @Test (expected = NullPointerException.class)
     public void testNullCompany() throws StockServiceException {
         databaseStockService.getQuote(null);
+    }
+
+    /**
+     * Test that an Exception is thrown if a non-existent company is passed.
+     */
+    @Test (expected = StockServiceException.class)
+    public void testBadCompany() throws StockServiceException {
+        databaseStockService.getQuote("NOTTHERE");
     }
 
     //Converts a Calendar to a LocalDateTime
