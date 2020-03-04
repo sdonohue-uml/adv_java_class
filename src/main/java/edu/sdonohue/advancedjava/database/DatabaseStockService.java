@@ -1,7 +1,5 @@
 package edu.sdonohue.advancedjava.database;
 
-import edu.sdonohue.advancedjava.database.DatabaseConnectionException;
-import edu.sdonohue.advancedjava.database.DatabaseUtils;
 import edu.sdonohue.advancedjava.stocks.StockQuote;
 import edu.sdonohue.advancedjava.stocks.StockService;
 import edu.sdonohue.advancedjava.stocks.StockServiceException;
@@ -31,10 +29,12 @@ public class DatabaseStockService implements StockService {
     public StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
         try {
             Connection connection = DatabaseUtils.getConnection();
-            String queryString = "SELECT * FROM stocks.quotes " +
-                    "WHERE symbol like ? " +
-                    "ORDER BY time DESC " +
-                    "LIMIT 1";
+            String queryString = new StringBuilder()
+                    .append("SELECT * FROM stocks.quotes ")
+                    .append("WHERE symbol like ? ")
+                    .append("ORDER BY time DESC ")
+                    .append("LIMIT 1")
+                    .toString();
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, symbol);
             ResultSet resultSet = statement.executeQuery();
@@ -67,34 +67,71 @@ public class DatabaseStockService implements StockService {
                                      @NotNull IntervalEnum interval) throws StockServiceException {
         try {
             Connection connection = DatabaseUtils.getConnection();
-            String queryString = "SELECT * FROM stocks.quotes " +
-                    "WHERE symbol like ? and time >= ? and time <= ? " +
-                    "ORDER BY time ASC";
+            String queryString = new StringBuilder()
+                    .append("(SELECT * FROM stocks.quotes ")
+                    .append("WHERE symbol like ? and time <= ? ")
+                    .append("ORDER BY time DESC ")
+                    .append("LIMIT 1) ")
+                    .append("UNION ")
+                    .append("(SELECT * FROM stocks.quotes ")
+                    .append("WHERE symbol like ? and time >= ? and time <= ?) ")
+                    .append("ORDER BY time ASC")
+                    .toString();
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, symbol);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println("from = " + dateFormat.format(from.getTime()));
             System.out.println("until = " + dateFormat.format(until.getTime()));
             statement.setString(2, dateFormat.format(from.getTime()));
-            statement.setString(3, dateFormat.format(until.getTime()));
+            statement.setString(3, symbol);
+            statement.setString(4, dateFormat.format(from.getTime()));
+            statement.setString(5, dateFormat.format(until.getTime()));
             ResultSet resultSet = statement.executeQuery();
             List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
             while(resultSet.next()) {
-                Date time = resultSet.getDate("time");
+                Date date = resultSet.getDate("time");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(time);
+                calendar.clear();
+                calendar.setTime(date);
+                LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
                 BigDecimal price = resultSet.getBigDecimal("price");
-                stockQuotes.add(new StockQuote(symbol, price,
-                        LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())));
+                stockQuotes.add(new StockQuote(symbol, price, localDateTime));
             }
             if (stockQuotes.isEmpty()) {
-                throw new StockServiceException("There is no stock data for:" + symbol);
+                throw new StockServiceException("There is no stock data for: " + symbol
+                        + " within the selected date range.");
             }
-            return stockQuotes;
+            return getListByInterval(stockQuotes, from, until, interval);
         } catch (DatabaseConnectionException | SQLException exception) {
             throw new StockServiceException(exception.getMessage(), exception);
         }
     }
 
+    private List<StockQuote> getListByInterval(List<StockQuote> rawQuotes, Calendar from, Calendar until, IntervalEnum interval){
+        List<StockQuote> listByInterval = new ArrayList<>();
+        StockQuote previousRecord = null;
+        StockQuote currentRecord = rawQuotes.get(0);
+        int index = 0;
+        for (Calendar timeOfQuote = (Calendar)from.clone(); !timeOfQuote.after(until); interval.advance(timeOfQuote)){
+            while (currentRecord != null && currentRecord.getDateAsCalendar().compareTo(timeOfQuote) <= 0){
+                previousRecord = currentRecord;
+                //check if end of list
+                index++;
+                if (index < rawQuotes.size()){
+                    currentRecord = rawQuotes.get(index);
+                } else {
+                    currentRecord = null;
+                }
+            }
+            listByInterval.add(previousRecord);
+        }
 
+        return listByInterval;
+    }
+
+    //converts Calendar to LocalDateTime
+    private LocalDateTime asLocalDateTime(@NotNull Calendar calendar){
+        LocalDateTime dateAsLDT = LocalDateTime.now();
+        return LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
+    }
 }

@@ -86,7 +86,8 @@ public class StockQuoteApplication {
         calendar.clear();
         try {
             date = LocalDate.parse(dateString, formatter);
-            calendar.set(date.getYear(), date.getMonthValue()-1, date.getDayOfMonth());
+            calendar.set(date.getYear(), date.getMonthValue()-1, date.getDayOfMonth(),
+                    0, 0, 1);
         } catch (DateTimeParseException e){
             throw new IllegalArgumentException(dateString + " is not a valid date");
         }

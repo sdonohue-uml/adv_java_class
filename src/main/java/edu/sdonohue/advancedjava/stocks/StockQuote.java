@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 /**
  * Class for holding the price of a share of stock on a given date.
@@ -77,6 +78,20 @@ public class StockQuote {
     @NotNull
     public LocalDateTime getDate(){
         return LocalDateTime.from(date);
+    }
+
+    /**
+     * Get the date that the price quote was for as a Calendar instance.
+     *
+     * @return The date of the quote
+     */
+    @NotNull
+    public Calendar getDateAsCalendar(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(date.getYear(), date.getMonthValue()-1, date.getDayOfYear(),
+                date.getHour(), date.getMinute(), date.getSecond());
+        return calendar;
     }
 
     /**
