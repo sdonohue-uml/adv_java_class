@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class DatabaseStockServiceTest {
     private DatabaseStockService databaseStockService;
-    private Calendar from; // 1/2/2010
+    private Calendar from; // 1/2/2020
     private Calendar until; // 1/5/2020
 
     /**
@@ -53,11 +53,11 @@ public class DatabaseStockServiceTest {
      */
     @Test
     public void testGetQuotes() throws StockServiceException {
-        List<StockQuote> stockQuotes = databaseStockService.getQuote("AMZN", from, until, StockService.IntervalEnum.DAILY );
+        List<StockQuote> stockQuotes = databaseStockService.getQuote("GOOG", from, until, StockService.IntervalEnum.DAILY );
         assertNotNull("Get Quotes should not return null", stockQuotes);
         assertEquals("Number of StockQuotes returned should be 4", 4, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
-            assertEquals("GetQuote should create a StockQuote for the requested company", "AMZN", stockQuote.getCompanySymbol());
+            assertEquals("GetQuote should return a StockQuote for the requested company", "GOOG", stockQuote.getCompanySymbol());
             boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
             assertTrue("Date of StockQuote should be within the requested range", isBetween);
         }
@@ -68,11 +68,11 @@ public class DatabaseStockServiceTest {
      */
     @Test
     public void testGetQuotesHourly() throws StockServiceException {
-        List<StockQuote> stockQuotes = databaseStockService.getQuote("AMZN", from, until, StockService.IntervalEnum.HOURLY );
+        List<StockQuote> stockQuotes = databaseStockService.getQuote("GOOG", from, until, StockService.IntervalEnum.HOURLY );
         assertNotNull("Get Quotes should not return null", stockQuotes);
         assertEquals("Number of StockQuotes returned should be 73", 73, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
-            assertEquals("GetQuote should return a StockQuote for the requested company", "AMZN", stockQuote.getCompanySymbol());
+            assertEquals("GetQuote should return a StockQuote for the requested company", "GOOG", stockQuote.getCompanySymbol());
             boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
             assertTrue("Date of StockQuote should be within the requested range", isBetween);
         }

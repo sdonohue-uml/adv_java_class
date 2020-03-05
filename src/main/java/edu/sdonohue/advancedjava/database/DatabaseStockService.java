@@ -98,7 +98,7 @@ public class DatabaseStockService implements StockService {
             }
             if (stockQuotes.isEmpty()) {
                 throw new StockServiceException("There is no stock data for: " + symbol
-                        + " within the selected date range.");
+                        + " for the selected date range.");
             }
             return getListByInterval(stockQuotes, from, until, interval);
         } catch (DatabaseConnectionException | SQLException exception) {
