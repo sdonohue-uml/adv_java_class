@@ -1,9 +1,9 @@
-package edu.sdonohue.advancedjava.database;
+package edu.sdonohue.advancedjava.util;
 
 /**
- * This class is used to signal a problem initializing to a database.
+ * This class is used to signal a problem connecting to a database.
  */
-public class DatabaseInitializationException extends Exception {
+public class DatabaseConnectionException extends Exception {
 
     /**
      * Constructs a new exception with the specified detail message and
@@ -19,7 +19,7 @@ public class DatabaseInitializationException extends Exception {
      *         unknown.)
      * @since  1.4
      */
-    public DatabaseInitializationException(String message, Throwable cause) {
+    public DatabaseConnectionException(String message, Throwable cause) {
         super(message, cause);
     }
 }

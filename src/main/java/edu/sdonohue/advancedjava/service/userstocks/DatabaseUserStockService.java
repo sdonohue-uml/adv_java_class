@@ -1,6 +1,6 @@
-package edu.sdonohue.advancedjava.service;
+package edu.sdonohue.advancedjava.service.userstocks;
 
-import edu.sdonohue.advancedjava.database.DatabaseUtils;
+import edu.sdonohue.advancedjava.util.DatabaseUtils;
 import edu.sdonohue.advancedjava.model.Person;
 import edu.sdonohue.advancedjava.model.UserStocks;
 import org.hibernate.Criteria;

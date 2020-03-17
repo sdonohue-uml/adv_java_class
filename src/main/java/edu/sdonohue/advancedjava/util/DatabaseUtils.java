@@ -1,7 +1,7 @@
-package edu.sdonohue.advancedjava.database;
+package edu.sdonohue.advancedjava.util;
 
 import com.ibatis.common.jdbc.ScriptRunner;
-import edu.sdonohue.advancedjava.service.DatabaseUserStockService;
+import edu.sdonohue.advancedjava.service.userstocks.DatabaseUserStockService;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -98,7 +98,7 @@ public class DatabaseUtils {
      */
     private static Configuration getConfiguration() {
 
-        synchronized (edu.sdonohue.advancedjava.database.DatabaseUtils.class) {
+        synchronized (edu.sdonohue.advancedjava.util.DatabaseUtils.class) {
             if (configuration == null) {
                 configuration = new Configuration();
                 configuration.configure("hibernate.cfg.xml");

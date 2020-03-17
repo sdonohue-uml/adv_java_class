@@ -1,7 +1,5 @@
-package edu.sdonohue.advancedjava.stocks;
+package edu.sdonohue.advancedjava.service.stocks;
 
-
-import edu.sdonohue.advancedjava.database.DatabaseStockService;
 
 import javax.validation.constraints.NotNull;
 

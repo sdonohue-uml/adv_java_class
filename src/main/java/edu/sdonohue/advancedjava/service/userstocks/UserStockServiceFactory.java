@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava.service;
+package edu.sdonohue.advancedjava.service.userstocks;
 
 /**
  * A factory that returns a <CODE>ActivitiesService</CODE> instance.

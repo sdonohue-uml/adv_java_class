@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava.stocks;
+package edu.sdonohue.advancedjava.model;
 
 
 

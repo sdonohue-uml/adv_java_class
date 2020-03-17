@@ -1,9 +1,10 @@
-package edu.sdonohue.advancedjava.database;
+package edu.sdonohue.advancedjava.service.stocks;
 
-import edu.sdonohue.advancedjava.stocks.StockQuote;
-import edu.sdonohue.advancedjava.stocks.StockService;
-import edu.sdonohue.advancedjava.stocks.StockServiceException;
-import org.jetbrains.annotations.Nullable;
+import edu.sdonohue.advancedjava.model.StockQuote;
+import edu.sdonohue.advancedjava.service.stocks.StockService;
+import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
+import edu.sdonohue.advancedjava.util.DatabaseConnectionException;
+import edu.sdonohue.advancedjava.util.DatabaseUtils;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;

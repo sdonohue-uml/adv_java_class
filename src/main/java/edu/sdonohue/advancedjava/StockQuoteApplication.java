@@ -1,9 +1,9 @@
 package edu.sdonohue.advancedjava;
 
-import edu.sdonohue.advancedjava.stocks.StockService.IntervalEnum;
-import edu.sdonohue.advancedjava.stocks.StockQuote;
-import edu.sdonohue.advancedjava.stocks.StockServiceException;
-import edu.sdonohue.advancedjava.stocks.StockServiceFactory;
+import edu.sdonohue.advancedjava.service.stocks.StockService.IntervalEnum;
+import edu.sdonohue.advancedjava.model.StockQuote;
+import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
+import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

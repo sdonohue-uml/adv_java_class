@@ -1,6 +1,6 @@
 package edu.sdonohue.advancedjava;
 
-import edu.sdonohue.advancedjava.stocks.StockQuote;
+import edu.sdonohue.advancedjava.model.StockQuote;
 import org.junit.Before;
 import org.junit.Test;
 

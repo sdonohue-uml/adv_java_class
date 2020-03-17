@@ -1,9 +1,21 @@
-package edu.sdonohue.advancedjava.service;
+package edu.sdonohue.advancedjava.service.stocks;
 
 /**
- * Used to signal an issue with UserStockService
+ * Used to signal a problem with the StockService.
  */
-public class UserStockServiceException extends Exception {
+public class StockServiceException extends Exception {
+
+    /**
+     * Constructs a new exception with the specified detail message.  The
+     * cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
+     *
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
+     */
+    public StockServiceException(String message) {
+        super(message);
+    }
 
     /**
      * Constructs a new exception with the specified detail message and
@@ -19,7 +31,7 @@ public class UserStockServiceException extends Exception {
      *                unknown.)
      * @since 1.4
      */
-    public UserStockServiceException(String message, Throwable cause) {
+    public StockServiceException(String message, Throwable cause) {
         super(message, cause);
     }
 }

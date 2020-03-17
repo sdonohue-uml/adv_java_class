@@ -1,7 +1,7 @@
 package edu.sdonohue.advancedjava;
 
-import edu.sdonohue.advancedjava.stocks.StockService;
-import edu.sdonohue.advancedjava.stocks.StockServiceFactory;
+import edu.sdonohue.advancedjava.service.stocks.StockService;
+import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

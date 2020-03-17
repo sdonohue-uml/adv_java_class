@@ -1,9 +1,8 @@
-package edu.sdonohue.advancedjava.stocks;
+package edu.sdonohue.advancedjava.service.stocks;
 
+import edu.sdonohue.advancedjava.model.StockQuote;
 import org.jetbrains.annotations.Nullable;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
 
