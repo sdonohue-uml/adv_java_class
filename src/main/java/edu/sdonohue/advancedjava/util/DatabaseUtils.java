@@ -27,7 +27,7 @@ public class DatabaseUtils {
     // JDBC driver name and database URL
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/stocks";
-//    public static final String initializationFile = "./src/main/sql/db_initialization.sql";
+    public static final String initializationFile = "./src/main/sql/db_initialization.sql";
 
     //  Database credentials
     private static final String USER = "monty";
