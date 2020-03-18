@@ -2,11 +2,13 @@ package edu.sdonohue.advancedjava.util;
 
 import com.ibatis.common.jdbc.ScriptRunner;
 import edu.sdonohue.advancedjava.service.userstocks.DatabaseUserStockService;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
+import javax.validation.constraints.NotNull;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +29,7 @@ public class DatabaseUtils {
     // JDBC driver name and database URL
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/stocks";
-    public static final String initializationFile = "./src/main/sql/db_initialization.sql";
+    public static final String defaultInitializationScript = "./src/main/sql/db_initialization.sql";
 
     //  Database credentials
     private static final String USER = "monty";
@@ -64,6 +66,13 @@ public class DatabaseUtils {
         return sessionFactory;
     }
 
+    public static void save(@NotNull Object object){
+        Session session = DatabaseUtils.getSessionFactory().openSession();
+        session.save(object);
+        session.flush();
+        session.close();
+    }
+
     /**
      * A utility method that runs a db initialize script.
      * @param initializationScript    full path to the script to run to create the schema
@@ -76,7 +85,8 @@ public class DatabaseUtils {
             connection = getConnection();
             connection.setAutoCommit(false);
             ScriptRunner runner = new ScriptRunner(connection, false, false);
-            InputStream inputStream = new  FileInputStream(initializationScript);
+            InputStream inputStream = new  FileInputStream(
+                    initializationScript != null? initializationScript : defaultInitializationScript);
 
             InputStreamReader reader = new InputStreamReader(inputStream);
 

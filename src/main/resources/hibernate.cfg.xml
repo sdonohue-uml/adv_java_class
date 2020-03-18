@@ -10,12 +10,14 @@
         <!-- the root of their class path with appropriate production values. -->
 
         <!-- Tug database connection URL and credentials -->
-        <property name="connection.url">jdbc:mysql://localhost:3306/activities</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/stocks</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
         <property name="hibernate.connection.username">monty</property>
         <property name="hibernate.connection.password">some_pass</property>
+
+        <property name="connection.autocommit">true</property>
 
         <mapping class="edu.sdonohue.advancedjava.model.Person"/>
         <mapping class="edu.sdonohue.advancedjava.model.UserStocks"/>

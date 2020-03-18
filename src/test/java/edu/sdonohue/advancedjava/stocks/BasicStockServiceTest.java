@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava;
+package edu.sdonohue.advancedjava.stocks;
 
 import edu.sdonohue.advancedjava.service.stocks.StockService.IntervalEnum;
 import edu.sdonohue.advancedjava.service.stocks.BasicStockService;

@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava;
+package edu.sdonohue.advancedjava.stocks;
 
 import edu.sdonohue.advancedjava.service.stocks.DatabaseStockService;
 import edu.sdonohue.advancedjava.model.StockQuote;
