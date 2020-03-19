@@ -76,18 +76,6 @@ public class DatabaseUtils {
     }
 
     /**
-     * Saves an object to the database.
-     *
-     * @param object the object to save.
-     */
-    public static void save(@NotNull Object object){
-        Session session = DatabaseUtils.getSessionFactory().openSession();
-        session.save(object);
-        session.flush();
-        session.close();
-    }
-
-    /**
      * A utility method that runs a db initialize script.
      *
      * @param initializationScript    full path to the script to run to create the schema

@@ -120,4 +120,32 @@ public class DatabaseUserStockServiceTest {
         List<String> stocks = userStockService.getStocks(jones);
         assertEquals("Jones should be interested in three stocks", 3, stocks.size());
     }
+
+    /**
+     * Verify that we get the correct list of stocks for a person after adding a new stock.
+     *
+     * @throws UserStockServiceException
+     */
+    @Test
+    public void testAddStocksToPerson() throws UserStockServiceException {
+        List<Person> personList = userStockService.getPerson();
+        Person jones = null;
+        for (Person person : personList){
+            if (person.getLastName().toLowerCase().equals("jones")){
+                jones = person;
+                break;
+            }
+        }
+        userStockService.addStockToPerson("TEST", jones);
+        List<String> stocks = userStockService.getStocks(jones);
+        boolean found = false;
+        for (String stock : stocks){
+            if (stock.equals("TEST")){
+                found = true;
+                break;
+            }
+        }
+        assertEquals("Jones should be interested in four stocks", 4, stocks.size());
+        assertTrue("stock 'TEST' should be found in the list of stocks", found);
+    }
 }

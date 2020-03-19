@@ -49,7 +49,7 @@ public class UserStocksTest {
      * Test that getters and setters for user stocks work correctly.
      */
     @Test
-    public void testPersonHobbiesGetterAndSetters() {
+    public void testUserStocksGetterAndSetters() {
         Person person = PersonTest.createPerson();
         UserStocks userStocks = new UserStocks();
         int id = 10;
