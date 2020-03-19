@@ -41,6 +41,7 @@ public class Person {
     }
 
     /**
+     *Get the First Name of the Person.
      *
      * @return the person's first name
      */
@@ -51,7 +52,8 @@ public class Person {
     }
 
     /**
-     * Specify the person's first name
+     * Specify the person's first name.
+     *
      * @param firstName a String value
      */
     public void setFirstName(String firstName) {
@@ -59,6 +61,7 @@ public class Person {
     }
 
     /**
+     * Get the last name of the Person.
      *
      * @return the person's last name
      */
@@ -69,7 +72,8 @@ public class Person {
     }
 
     /**
-     * Specify the person's last name
+     * Specify the person's last name.
+     *
      * @param lastName a String value
      */
     public void setLastName(String lastName) {
@@ -77,8 +81,9 @@ public class Person {
     }
 
     /**
+     * Get the birthdate of the Person.
      *
-     * @return the person's birthdate.
+     * @return the person's birthdate
      */
     @Basic
     @Column(name = "birth_date", nullable = false, insertable = true, updatable = true)
@@ -88,12 +93,16 @@ public class Person {
 
     /**
      * Specify the person's date of birth.
+     *
      * @param birthDate  the time the person was born.
      */
     public void setBirthDate(Timestamp birthDate) {
         this.birthDate = birthDate;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,6 +121,9 @@ public class Person {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int hashCode() {
         int result = id;

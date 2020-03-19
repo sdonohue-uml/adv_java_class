@@ -13,13 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *An implementation of UserStockService that stores and retrieves data from a database.
  *
  */
 public class DatabaseUserStockService implements UserStockService {
-
-
-
-
 
     /**
      * Get a list of all people

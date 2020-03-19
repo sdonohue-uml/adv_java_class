@@ -3,7 +3,7 @@ package edu.sdonohue.advancedjava.model;
 import javax.persistence.*;
 
 /**
- *
+ * Class that represents a stock that a person is interested in.
  */
 @Entity
 @Table(name = "user_stocks")
@@ -13,7 +13,7 @@ public class UserStocks {
     private String stock;
 
     /**
-     * Create a UserStocks that needs to be initialized
+     * Create a UserStocks that needs to be initialized.
      */
     public UserStocks() {
         // this empty constructor is required by hibernate framework
@@ -21,9 +21,9 @@ public class UserStocks {
     }
 
     /**
-     * Create a valid UserStocks
+     * Create a valid UserStocks.
      *
-     * @param person the person to assign the hobby to
+     * @param person the person to assign the stock to
      * @param stock  the stock to associate the person with
      */
     public UserStocks(Person person, String stock) {
@@ -53,6 +53,7 @@ public class UserStocks {
     }
 
     /**
+     * Get the Person for this UserStocks.
      *
      * @return get the Person associated with this stock
      */
@@ -72,6 +73,7 @@ public class UserStocks {
     }
 
     /**
+     * Get the stock symbol for this UserStock.
      *
      * @return get the stock associated with this Person
      */
@@ -90,6 +92,9 @@ public class UserStocks {
         this.stock = stock;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,6 +107,9 @@ public class UserStocks {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int hashCode() {
         int result = id;
@@ -110,9 +118,12 @@ public class UserStocks {
         return result;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public String toString() {
-        return "PersonHobby{" +
+        return "UserStock{" +
                 "id=" + id +
                 ", person=" + person +
                 ", stock=" + stock +

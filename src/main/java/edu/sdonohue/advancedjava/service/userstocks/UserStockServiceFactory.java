@@ -1,18 +1,19 @@
 package edu.sdonohue.advancedjava.service.userstocks;
 
 /**
- * A factory that returns a <CODE>ActivitiesService</CODE> instance.
+ * A factory that returns a <CODE>UserStockService</CODE> instance.
  */
 public class UserStockServiceFactory {
 
     /**
-     * Prevent instantiations
+     * Prevent instantiations.
      */
     private UserStockServiceFactory() {}
 
     /**
+     * Factory method to return a UserStockService.
      *
-     * @return get a <CODE>StockService</CODE> instance
+     * @return get a <CODE>UserStockService</CODE> instance
      */
     public static UserStockService getInstance() {
         return new DatabaseUserStockService();

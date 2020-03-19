@@ -5,7 +5,7 @@ import edu.sdonohue.advancedjava.model.Person;
 import java.util.List;
 
 /**
- *
+ * Defines the interface for service that will return UserStocks.
  */
 public interface UserStockService {
 
@@ -37,7 +37,7 @@ public interface UserStockService {
     List<String> getStocks(Person person) throws UserStockServiceException;
 
     /**
-     * Assign a hobby to a person.
+     * Assign a stock to a person.
      *
      * @param stock  The stock symbol to assign
      * @param person The person to assign the stock too.

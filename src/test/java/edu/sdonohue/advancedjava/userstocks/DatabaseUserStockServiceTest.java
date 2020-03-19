@@ -4,6 +4,7 @@ import edu.sdonohue.advancedjava.model.Person;
 import edu.sdonohue.advancedjava.service.userstocks.UserStockService;
 import edu.sdonohue.advancedjava.service.userstocks.UserStockServiceException;
 import edu.sdonohue.advancedjava.service.userstocks.UserStockServiceFactory;
+import edu.sdonohue.advancedjava.util.DatabaseInitializationException;
 import edu.sdonohue.advancedjava.util.DatabaseUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -16,41 +17,65 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for the DatabaseActivitiesService
+ * Unit tests for the DatabaseUserStockService
+ *
+ * @author Sean Donohue
+ * @version 1.0
  */
 public class DatabaseUserStockServiceTest {
 
     private UserStockService userStockService;
 
-    private void initDb() throws Exception {
+    private void initDb() throws DatabaseInitializationException {
         DatabaseUtils.initializeDatabase(null);
     }
 
-    // do not assume db is correct
+    /**
+     * Setup to run before each unit test
+     *
+     * @throws DatabaseInitializationException
+     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws DatabaseInitializationException {
         // we could also copy db state here for later restore before initializing
         initDb();
         userStockService = UserStockServiceFactory.getInstance();
     }
 
-    // clean up after ourselves. (this could also restore db from initial state
+    /**
+     * Resets the database after all unit tests
+     *
+     * @throws DatabaseInitializationException
+     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws DatabaseInitializationException {
         initDb();
     }
 
+    /**
+     * Test that the UserStockService is available
+     */
     @Test
     public void testGetInstance() {
-        assertNotNull("Make sure activitiesService is available", userStockService);
+        assertNotNull("UserStockService should be available", userStockService);
     }
 
+    /**
+     * Verify that getPerson() returns a populated list of person records
+     *
+     * @throws UserStockServiceException
+     */
     @Test
     public void testGetPerson() throws UserStockServiceException {
         List<Person> personList = userStockService.getPerson();
-        assertFalse("Make sure we get some Person objects from service", personList.isEmpty());
+        assertFalse("We should get a populated list of person objects", personList.isEmpty());
     }
 
+    /**
+     * Test that a newly added person is then returned by getPerson()
+     *
+     * @throws UserStockServiceException
+     */
     @Test
     public void testAddOrUpdatePerson()throws UserStockServiceException {
         Person newPerson = PersonTest.createPerson();
@@ -74,9 +99,14 @@ public class DatabaseUserStockServiceTest {
                 break;
             }
         }
-        assertTrue("Found the person we added", found);
+        assertTrue("We should be able to find the person we added", found);
     }
 
+    /**
+     * Verify that we get the correct list of stocks for a person
+     *
+     * @throws UserStockServiceException
+     */
     @Test
     public void testGetStocksByPerson() throws UserStockServiceException {
         List<Person> personList = userStockService.getPerson();
@@ -88,9 +118,6 @@ public class DatabaseUserStockServiceTest {
             }
         }
         List<String> stocks = userStockService.getStocks(jones);
-        assertEquals("Verify the list has three stocks ", 3, stocks.size());
-
+        assertEquals("Jones should be interested in three stocks", 3, stocks.size());
     }
-
-
 }

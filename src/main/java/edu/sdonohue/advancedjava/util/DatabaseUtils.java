@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 /**
  * A class that contains database related utility methods.
+ *
  */
 public class DatabaseUtils {
 
@@ -35,6 +36,12 @@ public class DatabaseUtils {
     private static final String USER = "monty";
     private static final String PASS = "some_pass";
 
+    /**
+     * Creates a connection to the database and return it.
+     *
+     * @return Connection to the database
+     * @throws DatabaseConnectionException
+     */
     public static Connection getConnection() throws DatabaseConnectionException{
         try {
 //            Class.forName(JDBC_DRIVER);
@@ -44,7 +51,9 @@ public class DatabaseUtils {
         }
     }
 
-    /*
+    /**
+     * A singleton SessionFactory for getting the database session.
+     *
      * @return SessionFactory for use with database transactions
      */
     public static SessionFactory getSessionFactory() {
@@ -66,6 +75,11 @@ public class DatabaseUtils {
         return sessionFactory;
     }
 
+    /**
+     * Saves an object to the database.
+     *
+     * @param object the object to save.
+     */
     public static void save(@NotNull Object object){
         Session session = DatabaseUtils.getSessionFactory().openSession();
         session.save(object);
@@ -75,6 +89,7 @@ public class DatabaseUtils {
 
     /**
      * A utility method that runs a db initialize script.
+     *
      * @param initializationScript    full path to the script to run to create the schema
      * @throws DatabaseInitializationException
      */
