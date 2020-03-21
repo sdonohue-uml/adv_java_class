@@ -1,8 +1,6 @@
 
 package edu.sdonohue.advancedjava.xml;
 
-import edu.sdonohue.advancedjava.model.StockQuote;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,7 +22,7 @@ import javax.xml.bind.annotation.XmlValue;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="StockQuote" maxOccurs="unbounded" minOccurs="0">
+ *         &lt;element name="quote" maxOccurs="unbounded" minOccurs="0">
  *           &lt;complexType>
  *             &lt;simpleContent>
  *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
@@ -45,16 +43,16 @@ import javax.xml.bind.annotation.XmlValue;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "stockQuote"
+        "quotes"
 })
 @XmlRootElement(name = "stocks")
 public class Stocks implements XMLDomainObject{
 
-    @XmlElement(name = "StockQuote")
-    protected List<Stocks.StockQuote> stockQuote;
+    @XmlElement(name = "quote")
+    protected List<Stocks.Quote> quotes;
 
     /**
-     * Gets the value of the stockQuote property.
+     * Gets the value of the quote property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
@@ -65,21 +63,21 @@ public class Stocks implements XMLDomainObject{
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getStockQuote().add(newItem);
+     *    getQuotes().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Stocks.StockQuote }
+     * {@link Stocks.Quote }
      * 
      * 
      */
-    public List<Stocks.StockQuote> getStockQuotes() {
-        if (stockQuote == null) {
-            stockQuote = new ArrayList<Stocks.StockQuote>();
+    public List<Stocks.Quote> getQuotes() {
+        if (quotes == null) {
+            quotes = new ArrayList<Stocks.Quote>();
         }
-        return this.stockQuote;
+        return this.quotes;
     }
 
 
@@ -106,7 +104,7 @@ public class Stocks implements XMLDomainObject{
     @XmlType(name = "", propOrder = {
         "value"
     })
-    public static class StockQuote {
+    public static class Quote {
 
         @XmlValue
         protected String value;
