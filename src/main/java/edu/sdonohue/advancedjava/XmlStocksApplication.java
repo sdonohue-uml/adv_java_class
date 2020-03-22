@@ -1,6 +1,5 @@
 package edu.sdonohue.advancedjava;
 
-import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.xml.InvalidXMLException;
 import edu.sdonohue.advancedjava.xml.Stocks;
 import edu.sdonohue.advancedjava.xml.XMLUtils;

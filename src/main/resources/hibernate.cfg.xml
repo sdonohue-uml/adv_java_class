@@ -21,6 +21,7 @@
 
         <mapping class="edu.sdonohue.advancedjava.model.Person"/>
         <mapping class="edu.sdonohue.advancedjava.model.UserStocks"/>
+        <mapping class="edu.sdonohue.advancedjava.model.Quote"/>
 
 
     </session-factory>
