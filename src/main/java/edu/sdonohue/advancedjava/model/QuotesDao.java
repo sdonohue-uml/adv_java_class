@@ -7,8 +7,18 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
+/**
+ * Class for accessing and manipulating the 'quotes' database table.
+ *
+ * @author Sean Donohue
+ */
 public class QuotesDao {
 
+    /**
+     * Get a list of all the Quotes in the database.
+     *
+     * @return The list of all quotes.
+     */
     public static List<Quote> getQuoteList(){
         Session session = null;
         List<Quote> quotes = null;
@@ -25,6 +35,12 @@ public class QuotesDao {
         return quotes;
     }
 
+    /**
+     * Get the Quote instance that has the given id in the database.
+     *
+     * @param id The id to find in the database
+     * @return The Quote with that id
+     */
     public static Quote getQuoteById(int id){
         Session session = null;
         Quote quote = null;
@@ -41,7 +57,12 @@ public class QuotesDao {
         return quote;
     }
 
-    public static void insertQuote(Quote quote){
+    /**
+     * Adds a new quote to the database, or updates an existing quote.
+     *
+     * @param quote The quote to add or update
+     */
+    public static void updateOrInsertQuote(Quote quote){
         Session session = null;
         Transaction transaction = null;
         try {
@@ -59,6 +80,11 @@ public class QuotesDao {
         }
     }
 
+    /**
+     * Deletes a quote from the database.
+     *
+     * @param quote The quote to delete
+     */
     public static void deleteQuote(Quote quote){
         Session session = null;
         Transaction transaction = null;

@@ -5,23 +5,32 @@ import edu.sdonohue.advancedjava.model.QuotesDao;
 import edu.sdonohue.advancedjava.xml.InvalidXMLException;
 import edu.sdonohue.advancedjava.xml.Stocks;
 import edu.sdonohue.advancedjava.xml.XMLUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.util.List;
 
+/**
+ * Application that reads in a list of stock quotes from an XML file and stores them in a database.
+ *
+ * @author Sean Donohue
+ */
 public class XmlStocksApplication {
 
+    /**
+     * The main method for XmlStockApplication that reads stock quote data from the stock_info.xml file
+     * and stores it in the database. No arguments.
+     *
+     * @param args none
+     */
     public static void main(String[] args){
         try{
             File file = new File(XmlStocksApplication.class.getResource("/xml/stock_info.xml").toURI());
             String xml = new String(Files.readAllBytes(file.toPath()));
             Stocks stocks = XMLUtils.unmarshall(xml, Stocks.class);
             for (Stocks.Quote xmlQuote : stocks.getQuotes()){
-                Quote dbQuote = new Quote(xmlQuote.getSymbol(), xmlQuote.getPrice(), xmlQuote.getTime());
-                QuotesDao.insertQuote(dbQuote);
+                Quote dbQuote = new Quote(xmlQuote);
+                QuotesDao.updateOrInsertQuote(dbQuote);
             }
             printQuotes();
         } catch (IOException | InvalidXMLException | URISyntaxException e) {
@@ -29,7 +38,7 @@ public class XmlStocksApplication {
         }
     }
 
-    //Output the list of StockQuotes.
+    //Output the list of Quotes from the database.
     private static void printQuotes(){
         StringBuilder header = new StringBuilder("StockQuotes from XML");
         System.out.println(header.toString());

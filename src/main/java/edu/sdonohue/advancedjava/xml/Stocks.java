@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlValue;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * Java class for holding the list of stock quotes from xml.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;/complexType>
  * </pre>
  * 
- * 
+ * @author Sean Donohue
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -48,6 +48,7 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlRootElement(name = "stocks")
 public class Stocks implements XMLDomainObject{
 
+    //The list of quote elements from XML
     @XmlElement(name = "quote")
     protected List<Stocks.Quote> quotes;
 
@@ -82,7 +83,7 @@ public class Stocks implements XMLDomainObject{
 
 
     /**
-     * <p>Java class for anonymous complex type.
+     * Java class for the quote elements from XML.
      *
      * <p>The following schema fragment specifies the expected content contained within this class.
      *

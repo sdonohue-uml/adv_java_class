@@ -38,7 +38,7 @@ public class QuoteDaoTest {
     @Test
     public void testInsertQuote(){
         Quote newQuote = new Quote("TEST", "100", "2015-02-10 00:00:01");
-        QuotesDao.insertQuote(newQuote);
+        QuotesDao.updateOrInsertQuote(newQuote);
         List<Quote> quotes = QuotesDao.getQuoteList();
         for (Quote quote : quotes){
             System.out.println(quote.toString());
