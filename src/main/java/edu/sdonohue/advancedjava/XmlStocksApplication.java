@@ -1,5 +1,7 @@
 package edu.sdonohue.advancedjava;
 
+import edu.sdonohue.advancedjava.model.Quote;
+import edu.sdonohue.advancedjava.model.QuotesDao;
 import edu.sdonohue.advancedjava.xml.InvalidXMLException;
 import edu.sdonohue.advancedjava.xml.Stocks;
 import edu.sdonohue.advancedjava.xml.XMLUtils;
@@ -17,18 +19,22 @@ public class XmlStocksApplication {
             File file = new File(XmlStocksApplication.class.getResource("/xml/stock_info.xml").toURI());
             String xml = new String(Files.readAllBytes(file.toPath()));
             Stocks stocks = XMLUtils.unmarshall(xml, Stocks.class);
-            printQuotes(stocks.getQuotes());
+            for (Stocks.Quote xmlQuote : stocks.getQuotes()){
+                Quote dbQuote = new Quote(xmlQuote.getSymbol(), xmlQuote.getPrice(), xmlQuote.getTime());
+                QuotesDao.insertQuote(dbQuote);
+            }
+            printQuotes();
         } catch (IOException | InvalidXMLException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
     //Output the list of StockQuotes.
-    private static void printQuotes(@NotNull List<Stocks.Quote> quotes){
+    private static void printQuotes(){
         StringBuilder header = new StringBuilder("StockQuotes from XML");
         System.out.println(header.toString());
         System.out.println("--------------------------------------------------------------------------------");
-        for (Stocks.Quote quote : quotes){
+        for (Quote quote : QuotesDao.getQuoteList()){
             System.out.println(quote);
         }
     }
