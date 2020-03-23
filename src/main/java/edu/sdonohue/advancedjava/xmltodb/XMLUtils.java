@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava.xml;
+package edu.sdonohue.advancedjava.xmltodb;
 
 import org.xml.sax.SAXException;
 

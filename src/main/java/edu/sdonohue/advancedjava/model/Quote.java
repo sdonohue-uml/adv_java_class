@@ -1,6 +1,6 @@
 package edu.sdonohue.advancedjava.model;
 
-import edu.sdonohue.advancedjava.xml.Stocks;
+import edu.sdonohue.advancedjava.xmltodb.Stocks;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -53,6 +53,39 @@ public class Quote {
         this.price = BigDecimal.valueOf(Double.parseDouble(xmlQuote.getPrice()));
         this.time = Timestamp.valueOf(xmlQuote.getTime());
     }
+
+    /**
+     * Creates a quote instance from String values. Used for testing only.
+     *
+     * @param symbol The symbol (e.g. "GOOG")
+     * @param price The price (e.g. "100")
+     * @param time The time (e.g. "2015-02-10 00:00:01")
+     */
+    public Quote(String symbol, String price, String time){
+        if (symbol == null || symbol.length() == 0){
+            throw new NullPointerException("Symbol cannot be null or empty");
+        }
+        this.symbol = symbol;
+
+        if (price == null || price.length() == 0){
+            throw new NullPointerException("price cannot be null or empty");
+        }
+        try {
+            this.price = BigDecimal.valueOf(Integer.parseInt(price));
+        } catch (NumberFormatException e){
+            throw new IllegalArgumentException("Price is not a valid value", e);
+        }
+
+        if (time == null || time.length() == 0){
+            throw new NullPointerException("Time cannot be null or empty");
+        }
+        try {
+            this.time = Timestamp.valueOf(time);
+        } catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("Time is not a valid timestamp", e);
+        }
+    }
+
 
     /**
      * Primary Key - Unique ID for a particular row in the quotes table.

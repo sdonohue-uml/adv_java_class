@@ -1,5 +1,5 @@
 
-package edu.sdonohue.advancedjava.xml;
+package edu.sdonohue.advancedjava.xmltodb;
 
 import java.util.ArrayList;
 import java.util.List;

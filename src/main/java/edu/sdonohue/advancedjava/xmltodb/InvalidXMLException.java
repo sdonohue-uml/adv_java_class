@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava.xml;
+package edu.sdonohue.advancedjava.xmltodb;
 
 /**
  *  Used to signal invalid XML or other JAXB related issues.

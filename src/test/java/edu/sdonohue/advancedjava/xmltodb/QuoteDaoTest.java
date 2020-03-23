@@ -1,4 +1,4 @@
-package edu.sdonohue.advancedjava.stocks;
+package edu.sdonohue.advancedjava.xmltodb;
 
 import edu.sdonohue.advancedjava.model.Quote;
 import edu.sdonohue.advancedjava.model.QuotesDao;
@@ -14,8 +14,16 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Unit tests for the QuoteDao class.
+ *
+ * @author Sean Donohue
+ */
 public class QuoteDaoTest {
 
+    /**
+     * Initialize the database before and after each test.
+     */
     @Before
     @After
     public void initDb(){
@@ -26,6 +34,9 @@ public class QuoteDaoTest {
         }
     }
 
+    /**
+     * Test that the getQuoteList() method returns the correct list from the database.
+     */
     @Test
     public void testQuoteList(){
         List<Quote> quotes = QuotesDao.getQuoteList();
@@ -35,6 +46,9 @@ public class QuoteDaoTest {
         assertEquals("Number of quotes should be 10", 10, quotes.size());
     }
 
+    /**
+     * Test that inserting a new Quote to the database works correctly.
+     */
     @Test
     public void testInsertQuote(){
         Quote newQuote = new Quote("TEST", "100", "2015-02-10 00:00:01");
@@ -46,6 +60,9 @@ public class QuoteDaoTest {
         assertEquals("Number of quotes should be 11", 11, quotes.size());
     }
 
+    /**
+     * Test that the getQuoteById() method returns the right record.
+     */
     @Test
     public void testGetQuoteById(){
         Quote quote = QuotesDao.getQuoteById(1);
@@ -55,6 +72,9 @@ public class QuoteDaoTest {
         assertEquals("Quote price should be 85", new BigDecimal(85), quote.getPrice());
     }
 
+    /**
+     * Test that the deleteQuote() method deletes the record from the database.
+     */
     @Test
     public void testDeleteQuote(){
         Quote delQuote = QuotesDao.getQuoteById(1);

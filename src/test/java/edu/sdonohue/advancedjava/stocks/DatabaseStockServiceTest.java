@@ -4,6 +4,9 @@ import edu.sdonohue.advancedjava.service.stocks.DatabaseStockService;
 import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.service.stocks.StockService;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
+import edu.sdonohue.advancedjava.util.DatabaseInitializationException;
+import edu.sdonohue.advancedjava.util.DatabaseUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,16 +18,31 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Unit tests for the DatabaseStockService class.
+ *
+ * @author Sean Donohue
+ */
 public class DatabaseStockServiceTest {
     private DatabaseStockService databaseStockService;
     private Calendar from; // 1/2/2020
     private Calendar until; // 1/5/2020
+
+    //inits the database
+    private void initDb(){
+        try {
+            DatabaseUtils.initializeDatabase(null);
+        } catch (DatabaseInitializationException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Set up to initialized each test. Creates a BasicStockService.
      */
     @Before
     public void setup(){
+        initDb();
         databaseStockService = new DatabaseStockService();
         from = Calendar.getInstance();
         from.clear();
@@ -32,6 +50,14 @@ public class DatabaseStockServiceTest {
         until = Calendar.getInstance();
         until.clear();
         until.set(2020, Calendar.JANUARY, 5);
+    }
+
+    /**
+     * Resets the database after each test.
+     */
+    @After
+    public void tearDown(){
+        initDb();
     }
 
     /**

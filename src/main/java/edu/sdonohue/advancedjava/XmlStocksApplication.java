@@ -2,9 +2,9 @@ package edu.sdonohue.advancedjava;
 
 import edu.sdonohue.advancedjava.model.Quote;
 import edu.sdonohue.advancedjava.model.QuotesDao;
-import edu.sdonohue.advancedjava.xml.InvalidXMLException;
-import edu.sdonohue.advancedjava.xml.Stocks;
-import edu.sdonohue.advancedjava.xml.XMLUtils;
+import edu.sdonohue.advancedjava.xmltodb.InvalidXMLException;
+import edu.sdonohue.advancedjava.xmltodb.Stocks;
+import edu.sdonohue.advancedjava.xmltodb.XMLUtils;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -27,7 +27,7 @@ public class XmlStocksApplication {
         try{
             File file = new File(XmlStocksApplication.class.getResource("/xml/stock_info.xml").toURI());
             String xml = new String(Files.readAllBytes(file.toPath()));
-            Stocks stocks = XMLUtils.unmarshall(xml, Stocks.class);
+            Stocks stocks = XMLUtils.unmarshall(xml, Stocks.class, "/xml/stock_info.xsd");
             for (Stocks.Quote xmlQuote : stocks.getQuotes()){
                 Quote dbQuote = new Quote(xmlQuote);
                 QuotesDao.updateOrInsertQuote(dbQuote);
