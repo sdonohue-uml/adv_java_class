@@ -18,7 +18,7 @@ import java.util.List;
  * @author Sean Donohue
  * @version 1.2
  */
-public class BasicStockService implements StockService {
+public class BasicStockService extends AbstractStockService {
 
     /**
      * @inheritDoc
