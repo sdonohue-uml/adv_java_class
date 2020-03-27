@@ -37,7 +37,7 @@ public class BasicStockService extends AbstractStockService {
     public List<StockQuote> getQuote(@NotNull String symbol, @NotNull LocalDateTime from, @NotNull LocalDateTime until,
                                      @NotNull IntervalEnum interval) {
         List<StockQuote> stocks = new LinkedList<>();
-        for (LocalDateTime timeOfQuote = from.plusDays(0); !from.isAfter(until); timeOfQuote = interval.advance(timeOfQuote)){
+        for (LocalDateTime timeOfQuote = from.plusDays(0); !timeOfQuote.isAfter(until); timeOfQuote = interval.advance(timeOfQuote)){
             stocks.add(generateQuote(symbol, timeOfQuote));
         }
         return stocks;
