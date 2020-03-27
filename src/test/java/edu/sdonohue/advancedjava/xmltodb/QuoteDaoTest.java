@@ -67,8 +67,8 @@ public class QuoteDaoTest {
     public void testGetQuoteById(){
         Quote quote = QuotesDao.getQuoteById(1);
         assertEquals("Quote symbol should be GOOG", "GOOG", quote.getSymbol());
-        assertEquals("Quote time should be 2004-08-19 00:00:01",
-                Timestamp.valueOf("2004-08-19 00:00:01"), quote.getTime());
+        assertEquals("Quote time should be 2004-08-19 00:00:00",
+                Timestamp.valueOf("2004-08-19 00:00:00"), quote.getTime());
         assertEquals("Quote price should be 85", new BigDecimal(85), quote.getPrice());
     }
 

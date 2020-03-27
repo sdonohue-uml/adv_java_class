@@ -4,6 +4,8 @@ import edu.sdonohue.advancedjava.service.stocks.StockService.IntervalEnum;
 import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
+import edu.sdonohue.advancedjava.util.DatabaseInitializationException;
+import edu.sdonohue.advancedjava.util.DatabaseUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +41,8 @@ public class StockQuoteApplication {
      *             Optional: interval (e.g. DAILY)
      */
     public static void main(String[] args) {
+        initDb();
+
         //Make sure we have the right number of arguments
         if (args == null || args.length == 0) {
             throw new NullPointerException("No arguments. Company symbol is required.");
@@ -115,6 +119,15 @@ public class StockQuoteApplication {
                 System.out.println(quote);
             }
         } catch (StockServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //inits the database
+    private static void initDb(){
+        try {
+            DatabaseUtils.initializeDatabase(null);
+        } catch (DatabaseInitializationException e) {
             e.printStackTrace();
         }
     }
