@@ -91,11 +91,6 @@ public class DatabaseStockService extends AbstractStockService {
             List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
             while(resultSet.next()) {
                 LocalDateTime time = resultSet.getTimestamp("time").toLocalDateTime();
-//                Date date = resultSet.getDate("time");
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.clear();
-//                calendar.setTime(date);
-//                LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
                 BigDecimal price = resultSet.getBigDecimal("price");
                 stockQuotes.add(new StockQuote(symbol, price, time));
             }

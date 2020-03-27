@@ -77,13 +77,18 @@ public class RestStockService extends AbstractStockService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
             // Store the results in a string to return (default results are json)
-            String resultsString = "";
+            StringBuilder resultsString = new StringBuilder();
             String line = reader.readLine();
             while (line != null) {
-                resultsString += line;
+                resultsString.append(line);
                 line = reader.readLine();
             }
-            return getListByInterval(parseJson(resultsString, symbol), from, until, interval);
+            List<StockQuote> stockQuotes = parseJson(resultsString.toString(), symbol);
+            if (stockQuotes.isEmpty()) {
+                throw new StockServiceException("There is no stock data for: " + symbol
+                        + " for the selected date range.");
+            }
+            return getListByInterval(stockQuotes, from, until, interval);
         } catch (IOException e) {
             e.printStackTrace();
         }

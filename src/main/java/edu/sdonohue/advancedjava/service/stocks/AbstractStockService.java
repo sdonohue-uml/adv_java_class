@@ -15,7 +15,7 @@ public abstract class AbstractStockService implements StockService {
         StockQuote currentRecord = rawQuotes.get(0);
         int rawQuotesIndex = 0;
         for (LocalDateTime timeOfQuote = from.plusDays(0); !timeOfQuote.isAfter(until); timeOfQuote = interval.advance(timeOfQuote)){
-            while (currentRecord != null && currentRecord.getDate().isBefore(timeOfQuote)){
+            while (currentRecord != null && currentRecord.getDate().compareTo(timeOfQuote) <= 0){
                 previousRecord = currentRecord;
                 //check if end of list
                 rawQuotesIndex++;
@@ -25,8 +25,9 @@ public abstract class AbstractStockService implements StockService {
                     currentRecord = null;
                 }
             }
-            //todo: check for null previous record if all records are after the interval
-            listByInterval.add(new StockQuote(previousRecord.getCompanySymbol(), previousRecord.getPrice(),timeOfQuote));
+            if (previousRecord != null){
+                listByInterval.add(new StockQuote(previousRecord.getCompanySymbol(), previousRecord.getPrice(),timeOfQuote));
+            }
         }
 
         return listByInterval;

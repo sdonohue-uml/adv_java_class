@@ -46,14 +46,14 @@ INSERT INTO stocks.user_stocks (ID, person_id, stock) VALUES (5, 3, "IBM");
 INSERT INTO stocks.user_stocks (ID, person_id, stock) VALUES (6, 3, "FORD");
 INSERT INTO stocks.user_stocks (ID, person_id, stock) VALUES (7, 4, "NFLX");
 
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (1, "GOOG", "2004-08-19 00:00:01", 85);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (2, "GOOG", "2015-02-03 00:00:01", 527);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (3, "APPL", "2000-01-01 00:00:01", 118);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (4, "AMZN", "2015-02-03 00:00:01", 363);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (5, "AMZN", "2020-01-02 00:00:01", 100);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (6, "AMZN", "2020-01-03 00:00:01", 110);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (7, "AMZN", "2020-01-04 00:00:01", 120);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (8, "AMZN", "2020-01-05 00:00:01", 130);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (9, "AMZN", "2020-01-06 00:00:01", 140);
-INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (10, "AMZN", "2020-01-04 12:00:01", 125);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (1, "GOOG", "2004-08-19 00:00:00", 85);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (2, "GOOG", "2015-02-03 00:00:00", 527);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (3, "APPL", "2000-01-01 00:00:00", 118);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (4, "AMZN", "2015-02-03 00:00:00", 363);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (5, "AMZN", "2020-01-02 00:00:00", 100);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (6, "AMZN", "2020-01-03 00:00:00", 110);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (7, "AMZN", "2020-01-04 00:00:00", 120);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (8, "AMZN", "2020-01-05 00:00:00", 130);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (9, "AMZN", "2020-01-06 00:00:00", 140);
+INSERT INTO stocks.quotes (id, symbol, time, price) VALUES (10, "AMZN", "2020-01-04 12:00:00", 125);
 
