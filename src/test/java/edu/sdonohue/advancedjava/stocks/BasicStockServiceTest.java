@@ -7,8 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Calendar;
+import java.time.Month;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -21,8 +20,8 @@ import static org.junit.Assert.*;
  */
 public class BasicStockServiceTest {
     private BasicStockService basicStockService;
-    private Calendar from; // 1/1/2019
-    private Calendar until; // 12/31/2019
+    private LocalDateTime from; // 1/1/2019
+    private LocalDateTime until; // 12/31/2019
 
     /**
      * Set up to initialized each test. Creates a BasicStockService.
@@ -30,12 +29,8 @@ public class BasicStockServiceTest {
     @Before
     public void setup(){
         basicStockService = new BasicStockService();
-        from = Calendar.getInstance();
-        from.clear();
-        from.set(2019, Calendar.JANUARY, 1);
-        until = Calendar.getInstance();
-        until.clear();
-        until.set(2020, Calendar.JANUARY, 1);
+        from = LocalDateTime.of(2019, Month.JANUARY, 1, 0, 0, 0);
+        until = LocalDateTime.of(2020, Month.JANUARY, 1, 0, 0, 0);
     }
 
     /**
@@ -54,7 +49,7 @@ public class BasicStockServiceTest {
         assertEquals("Number of StockQuotes returned should be " + expectedNumQuotes, expectedNumQuotes, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
             assertEquals("GetQuote should create a StockQuote for the requested company", "TEST", stockQuote.getCompanySymbol());
-            boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
+            boolean isBetween = !stockQuote.getDate().isBefore(from) && !stockQuote.getDate().isAfter(until);
             assertTrue("Date of StockQuote should be within the requested range", isBetween);
         }
     }
@@ -97,11 +92,5 @@ public class BasicStockServiceTest {
     @Test (expected = NullPointerException.class)
     public void testNullCompany(){
         basicStockService.getQuote(null);
-    }
-
-    //Converts a Calendar to a LocalDateTime
-    private LocalDateTime asLocalDateTime(Calendar calendar)
-    {
-        return LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
     }
 }

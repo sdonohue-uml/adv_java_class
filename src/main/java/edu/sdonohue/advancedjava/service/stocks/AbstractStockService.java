@@ -12,13 +12,13 @@ import java.util.List;
 public abstract class AbstractStockService implements StockService {
 
     //Takes a list of raw quotes from the source and creates a new list of quotes, one for each interval
-    protected List<StockQuote> getListByInterval(List<StockQuote> rawQuotes, Calendar from, Calendar until, IntervalEnum interval){
+    protected List<StockQuote> getListByInterval(List<StockQuote> rawQuotes, LocalDateTime from, LocalDateTime until, IntervalEnum interval){
         List<StockQuote> listByInterval = new ArrayList<>();
-        StockQuote previousRecord = null;
         StockQuote currentRecord = rawQuotes.get(0);
+        StockQuote previousRecord = currentRecord;
         int index = 0;
-        for (Calendar timeOfQuote = (Calendar)from.clone(); !timeOfQuote.after(until); interval.advance(timeOfQuote)){
-            while (currentRecord != null && currentRecord.getDateAsCalendar().compareTo(timeOfQuote) <= 0){
+        for (LocalDateTime timeOfQuote = from.plusDays(0); !from.isAfter(until); timeOfQuote = interval.advance(timeOfQuote)){
+            while (currentRecord != null && currentRecord.getDate().isBefore(timeOfQuote)){
                 previousRecord = currentRecord;
                 //check if end of list
                 index++;
@@ -28,15 +28,9 @@ public abstract class AbstractStockService implements StockService {
                     currentRecord = null;
                 }
             }
-            listByInterval.add(new StockQuote(previousRecord.getCompanySymbol(), previousRecord.getPrice(),
-                    asLocalDateTime(timeOfQuote)));
+            listByInterval.add(new StockQuote(previousRecord.getCompanySymbol(), previousRecord.getPrice(),timeOfQuote));
         }
 
         return listByInterval;
-    }
-
-    //converts Calendar to LocalDateTime
-    protected LocalDateTime asLocalDateTime(@NotNull Calendar calendar){
-        return LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
     }
 }

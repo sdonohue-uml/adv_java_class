@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -18,25 +21,19 @@ import static org.junit.Assert.assertEquals;
  * @version 1.2
  */
 public class IntervalEnumTest {
-    private Calendar startDate; //12/31/2019 12:00am
+    private LocalDateTime startDate; //12/31/2019 12:00am
 
     @Before
     public void setup(){
-        startDate = Calendar.getInstance();
-        startDate.clear();
-        startDate.set(2019, Calendar.DECEMBER, 31);
+        startDate = LocalDateTime.of(2019, Month.DECEMBER, 31, 0, 0, 0);
     }
 
     private void advanceTest(IntervalEnum interval, int year, int month, int day, int hour){
-        interval.advance(startDate);
-        Calendar expected = Calendar.getInstance();
-        expected.clear();
-        expected.set(year, month, day, hour,0, 0);
-        Date expectedAsDate = expected.getTime();
-        Date actualAsDate = startDate.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-        assertEquals(interval.toString() + " should advance date to " + dateFormat.format(expectedAsDate) +
-                        " but is " + dateFormat.format(actualAsDate), 0, startDate.compareTo(expected));
+        LocalDateTime actual = interval.advance(startDate);
+        LocalDateTime expected = LocalDateTime.of(year, month, day, hour, 0, 0);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss");
+        assertEquals(interval.toString() + " should advance date to " + expected.format(formatter) +
+                        " but is " + actual.format(formatter), 0, actual.compareTo(expected));
     }
 
     /**

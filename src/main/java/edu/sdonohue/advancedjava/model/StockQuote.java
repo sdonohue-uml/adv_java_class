@@ -7,8 +7,10 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Class for holding the price of a share of stock on a given date.

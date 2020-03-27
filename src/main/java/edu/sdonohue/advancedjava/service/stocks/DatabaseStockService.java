@@ -12,6 +12,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -65,7 +66,7 @@ public class DatabaseStockService extends AbstractStockService {
      */
     @Override
     @NotNull
-    public List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
+    public List<StockQuote> getQuote(@NotNull String symbol, @NotNull LocalDateTime from, @NotNull LocalDateTime until,
                                      @NotNull IntervalEnum interval) throws StockServiceException {
         try {
             Connection connection = DatabaseUtils.getConnection();
@@ -81,21 +82,22 @@ public class DatabaseStockService extends AbstractStockService {
                     .toString();
             PreparedStatement statement = connection.prepareStatement(queryString);
             statement.setString(1, symbol);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            statement.setString(2, dateFormat.format(from.getTime()));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            statement.setString(2, from.format(formatter));
             statement.setString(3, symbol);
-            statement.setString(4, dateFormat.format(from.getTime()));
-            statement.setString(5, dateFormat.format(until.getTime()));
+            statement.setString(4, from.format(formatter));
+            statement.setString(5, until.format(formatter));
             ResultSet resultSet = statement.executeQuery();
             List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
             while(resultSet.next()) {
-                Date date = resultSet.getDate("time");
-                Calendar calendar = Calendar.getInstance();
-                calendar.clear();
-                calendar.setTime(date);
-                LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
+                LocalDateTime time = resultSet.getTimestamp("time").toLocalDateTime();
+//                Date date = resultSet.getDate("time");
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.clear();
+//                calendar.setTime(date);
+//                LocalDateTime localDateTime = LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
                 BigDecimal price = resultSet.getBigDecimal("price");
-                stockQuotes.add(new StockQuote(symbol, price, localDateTime));
+                stockQuotes.add(new StockQuote(symbol, price, time));
             }
             if (stockQuotes.isEmpty()) {
                 throw new StockServiceException("There is no stock data for: " + symbol

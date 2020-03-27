@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
@@ -25,8 +26,8 @@ import static org.junit.Assert.*;
  */
 public class DatabaseStockServiceTest {
     private DatabaseStockService databaseStockService;
-    private Calendar from; // 1/2/2020
-    private Calendar until; // 1/5/2020
+    private LocalDateTime from; // 1/2/2020
+    private LocalDateTime until; // 1/5/2020
 
     //inits the database
     private void initDb(){
@@ -44,12 +45,8 @@ public class DatabaseStockServiceTest {
     public void setup(){
         initDb();
         databaseStockService = new DatabaseStockService();
-        from = Calendar.getInstance();
-        from.clear();
-        from.set(2020, Calendar.JANUARY, 2);
-        until = Calendar.getInstance();
-        until.clear();
-        until.set(2020, Calendar.JANUARY, 5);
+        from = LocalDateTime.of(2020, Month.JANUARY, 2, 0, 0, 0);
+        until = LocalDateTime.of(2020, Month.JANUARY, 5, 0, 0, 0);
     }
 
     /**
@@ -84,7 +81,7 @@ public class DatabaseStockServiceTest {
         assertEquals("Number of StockQuotes returned should be 4", 4, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
             assertEquals("GetQuote should return a StockQuote for the requested company", "GOOG", stockQuote.getCompanySymbol());
-            boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
+            boolean isBetween = !stockQuote.getDate().isBefore(from) && !stockQuote.getDate().isAfter(until);
             assertTrue("Date of StockQuote should be within the requested range", isBetween);
         }
     }
@@ -99,7 +96,7 @@ public class DatabaseStockServiceTest {
         assertEquals("Number of StockQuotes returned should be 73", 73, stockQuotes.size());
         for (StockQuote stockQuote : stockQuotes){
             assertEquals("GetQuote should return a StockQuote for the requested company", "GOOG", stockQuote.getCompanySymbol());
-            boolean isBetween = !stockQuote.getDate().isBefore(asLocalDateTime(from)) && !stockQuote.getDate().isAfter(asLocalDateTime(until));
+            boolean isBetween = !stockQuote.getDate().isBefore(from) && !stockQuote.getDate().isAfter(until);
             assertTrue("Date of StockQuote should be within the requested range", isBetween);
         }
     }
@@ -118,11 +115,5 @@ public class DatabaseStockServiceTest {
     @Test (expected = StockServiceException.class)
     public void testBadCompany() throws StockServiceException {
         databaseStockService.getQuote("NOTTHERE");
-    }
-
-    //Converts a Calendar to a LocalDateTime
-    private LocalDateTime asLocalDateTime(Calendar calendar)
-    {
-        return LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault());
     }
 }
