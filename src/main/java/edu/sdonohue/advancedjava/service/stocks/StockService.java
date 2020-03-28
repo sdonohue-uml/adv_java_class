@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -42,36 +41,22 @@ public interface StockService {
      * Enumeration of the valid intervals between StockQuotes
      */
     enum IntervalEnum{
-        HOURLY(Calendar.HOUR_OF_DAY, 1, ChronoUnit.HOURS),
-        DAILY(Calendar.DAY_OF_YEAR, 1, ChronoUnit.DAYS),
-        WEEKLY(Calendar.WEEK_OF_YEAR, 1, ChronoUnit.WEEKS),
-        BI_WEEKLY(Calendar.WEEK_OF_YEAR, 2, ChronoUnit.WEEKS),
-        MONTHLY(Calendar.MONTH, 1, ChronoUnit.MONTHS),
-        BI_MONTHLY(Calendar.MONTH, 2, ChronoUnit.MONTHS),
-        SEMI_ANNUALLY(Calendar.MONTH, 6, ChronoUnit.MONTHS),
-        ANNUALLY(Calendar.YEAR, 1, ChronoUnit.YEARS),
-        BI_ANNUALLY(Calendar.YEAR, 2, ChronoUnit.YEARS);
+        HOURLY(1, ChronoUnit.HOURS),
+        DAILY(1, ChronoUnit.DAYS),
+        WEEKLY(1, ChronoUnit.WEEKS),
+        BI_WEEKLY(2, ChronoUnit.WEEKS),
+        MONTHLY(1, ChronoUnit.MONTHS),
+        BI_MONTHLY(2, ChronoUnit.MONTHS),
+        SEMI_ANNUALLY(6, ChronoUnit.MONTHS),
+        ANNUALLY(1, ChronoUnit.YEARS),
+        BI_ANNUALLY(2, ChronoUnit.YEARS);
 
-        private final int datePart;
         private final int quantity;
         private final ChronoUnit chronoUnit;
 
-        IntervalEnum(int datePart, int quantity, ChronoUnit chronoUnit){
-            this.datePart = datePart;
+        IntervalEnum(int quantity, ChronoUnit chronoUnit){
             this.quantity = quantity;
             this.chronoUnit = chronoUnit;
-        }
-
-        /**
-         * Advances the provided Calendar forward by the interval.
-         *
-         * @param startDate The date to be advanced from
-         * @return The same Calendar object with the advanced date and time
-         */
-        @NotNull
-        public Calendar advance(@NotNull Calendar startDate) {
-            startDate.add(datePart, quantity);
-            return startDate;
         }
 
         /**

@@ -81,7 +81,7 @@ public class StockQuoteApplication {
         }
     }
 
-    //Utility method for turning a date string argument into a Calendar instance.
+    //Utility method for turning a date string argument into a LocalDateTime instance.
     private static LocalDateTime getLocalDateTime(String dateString) {
         LocalDateTime date = null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu HH:mm:ss");

@@ -8,10 +8,8 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -42,12 +40,9 @@ public class DatabaseStockService extends AbstractStockService {
             ResultSet resultSet = statement.executeQuery();
             List<StockQuote> stockQuotes = new ArrayList<>(resultSet.getFetchSize());
             if (resultSet.first()) {
-                Date time = resultSet.getDate("time");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(time);
+                LocalDateTime time = resultSet.getTimestamp("time").toLocalDateTime();
                 BigDecimal price = resultSet.getBigDecimal("price");
-                stockQuotes.add(new StockQuote(symbol, price,
-                        LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())));
+                stockQuotes.add(new StockQuote(symbol, price, time));
             }
             if (stockQuotes.isEmpty()) {
                 throw new StockServiceException("There is no stock data for: " + symbol);

@@ -16,13 +16,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * An implementation of StockService that retrieves stock data from a RESTful service.
+ * An implementation of StockService that retrieves stock data from a REST service.
  *
  * @author Sean Donohue
  */
 public class RestStockService extends AbstractStockService {
 
-
+    /**
+     * @inheritDoc
+     */
     @Override
     @NotNull
     public StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
@@ -61,12 +63,17 @@ public class RestStockService extends AbstractStockService {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @NotNull
     public List<StockQuote> getQuote(String symbol, LocalDateTime from, LocalDateTime until, IntervalEnum interval) throws StockServiceException {
+        // Get data from up to 5 days prior in case the start day is on a weekend or holiday
         LocalDateTime adjustedFrom = from.minusDays(5);
         String fromStr = adjustedFrom.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
         String untilStr = until.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
+
         String queryString = "https://api.unibit.ai/v2/stock/historical";
         queryString += "?tickers=" + symbol;
         queryString += "&startDate=" + fromStr;
@@ -100,6 +107,7 @@ public class RestStockService extends AbstractStockService {
         }
     }
 
+    // Parses the JSON response into a list of StockQuotes sorted by date
     private List<StockQuote> parseJson(String json, String symbol) throws StockServiceException {
         List<StockQuote> quotes = new ArrayList<>();
         try {
@@ -120,6 +128,7 @@ public class RestStockService extends AbstractStockService {
             throw new StockServiceException("There is no stock data for: " + symbol);
         }
 
+        // Sort by date
         quotes.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
 
         return quotes;

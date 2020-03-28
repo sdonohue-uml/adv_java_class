@@ -6,7 +6,6 @@ import edu.sdonohue.advancedjava.service.stocks.StockService;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
