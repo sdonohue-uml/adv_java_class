@@ -4,19 +4,18 @@ import edu.sdonohue.advancedjava.service.stocks.StockService.IntervalEnum;
 import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
+import edu.sdonohue.advancedjava.util.DatabaseInitializationException;
+import edu.sdonohue.advancedjava.util.DatabaseUtils;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Calendar;
 import java.util.List;
 
 /**
  * An application that retrieves StockQuotes for a given company.
  *
  * @author Sean Donohue
- * @version 1.2
  */
 public class StockQuoteApplication {
 
@@ -41,6 +40,7 @@ public class StockQuoteApplication {
      *             Optional: interval (e.g. DAILY)
      */
     public static void main(String[] args) {
+
         //Make sure we have the right number of arguments
         if (args == null || args.length == 0) {
             throw new NullPointerException("No arguments. Company symbol is required.");
@@ -57,12 +57,12 @@ public class StockQuoteApplication {
 
         //If we have 3 or 4 arguments
         if (args.length >= 3){
-            Calendar from = getCalendar(args[1]);
-            Calendar until = getCalendar(args[2]);
-            if (from.after(until)){
+            LocalDateTime from = getLocalDateTime(args[1]);
+            LocalDateTime until = getLocalDateTime(args[2]);
+            if (from.isAfter(until)){
                 throw new IllegalArgumentException("The start date must be before the end date.");
             }
-            if (until.after(Calendar.getInstance())){
+            if (until.isAfter(LocalDateTime.now())){
                 throw new IllegalArgumentException("The end date must not be after today.");
             }
             IntervalEnum interval = IntervalEnum.DAILY;
@@ -79,20 +79,17 @@ public class StockQuoteApplication {
         }
     }
 
-    //Utility method for turning a date string argument into a Calendar instance.
-    private static Calendar getCalendar(String dateString) {
-        LocalDate date = null;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
+    //Utility method for turning a date string argument into a LocalDateTime instance.
+    private static LocalDateTime getLocalDateTime(String dateString) {
+        LocalDateTime date = null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu HH:mm:ss");
         try {
-            date = LocalDate.parse(dateString, formatter);
-            calendar.set(date.getYear(), date.getMonthValue()-1, date.getDayOfMonth(),
-                    0, 0, 1);
+            String dateTimeString = dateString + " 00:00:00";
+            date = LocalDateTime.parse(dateTimeString, formatter);
         } catch (DateTimeParseException e){
             throw new IllegalArgumentException(dateString + " is not a valid date");
         }
-        return calendar;
+        return date;
     }
 
     //Output the StockQuote for today for the given company
@@ -107,19 +104,28 @@ public class StockQuoteApplication {
     }
 
     //Output the list of StockQuotes for the given company within the given date range.
-    private static void getQuotes(String symbol, Calendar from, Calendar until, IntervalEnum interval){
+    private static void getQuotes(String symbol, LocalDateTime from, LocalDateTime until, IntervalEnum interval){
         try {
             List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, from, until, interval);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             StringBuilder header = new StringBuilder(interval.toString()).append(" stock prices for ").append(symbol)
-                    .append(" between ").append(dateFormat.format(from.getTime()))
-                    .append(" and ").append(dateFormat.format(until.getTime()));
+                    .append(" between ").append(from.format(formatter))
+                    .append(" and ").append(until.format(formatter));
             System.out.println(header.toString());
             System.out.println("--------------------------------------------------------------------------------");
             for (StockQuote quote : quotes){
                 System.out.println(quote);
             }
         } catch (StockServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //inits the database
+    private static void initDb(){
+        try {
+            DatabaseUtils.initializeDatabase(null);
+        } catch (DatabaseInitializationException e) {
             e.printStackTrace();
         }
     }
