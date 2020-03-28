@@ -16,7 +16,6 @@ import java.util.List;
  * An application that retrieves StockQuotes for a given company.
  *
  * @author Sean Donohue
- * @version 1.2
  */
 public class StockQuoteApplication {
 
@@ -41,7 +40,6 @@ public class StockQuoteApplication {
      *             Optional: interval (e.g. DAILY)
      */
     public static void main(String[] args) {
-//        initDb();
 
         //Make sure we have the right number of arguments
         if (args == null || args.length == 0) {

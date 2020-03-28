@@ -15,6 +15,8 @@ import java.util.List;
 /**
  * An implementation of the StockService interface that gets
  * stock data from a database.
+ *
+ * @author Sean Donohue
  */
 public class DatabaseStockService extends AbstractStockService {
 

@@ -6,6 +6,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract StockService implementation
+ *
+ * @author Sean Donohue
+ */
 public abstract class AbstractStockService implements StockService {
 
     //Takes a list of raw quotes from the source and creates a new list of quotes, one for each interval
