@@ -1,15 +1,12 @@
 package edu.sdonohue.advancedjava.service.stocks;
 
 import edu.sdonohue.advancedjava.model.StockQuote;
-import edu.sdonohue.advancedjava.service.stocks.StockService;
-import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.util.DatabaseConnectionException;
 import edu.sdonohue.advancedjava.util.DatabaseUtils;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +27,7 @@ public class DatabaseStockService extends AbstractStockService {
     @NotNull
     public StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
         if (symbol == null){
-            throw new NullPointerException("Compnay symbol must not be null");
+            throw new NullPointerException("Company symbol must not be null");
         }
         try {
             Connection connection = DatabaseUtils.getConnection();

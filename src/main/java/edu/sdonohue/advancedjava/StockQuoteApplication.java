@@ -41,7 +41,7 @@ public class StockQuoteApplication {
      *             Optional: interval (e.g. DAILY)
      */
     public static void main(String[] args) {
-        initDb();
+//        initDb();
 
         //Make sure we have the right number of arguments
         if (args == null || args.length == 0) {

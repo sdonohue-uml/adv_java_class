@@ -1,9 +1,9 @@
 package edu.sdonohue.advancedjava.service.stocks;
 
 import edu.sdonohue.advancedjava.model.StockQuote;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.validation.constraints.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -24,7 +24,12 @@ public class RestStockService extends AbstractStockService {
 
 
     @Override
-    public @Nullable StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
+    @NotNull
+    public StockQuote getQuote(@NotNull String symbol) throws StockServiceException {
+        if (symbol == null){
+            throw new NullPointerException("Compnay symbol must not be null");
+        }
+
         String queryString = "https://api.unibit.ai/v2/stock/historical";
         queryString += "?tickers=" + symbol;
         queryString += "&dataType=json";
@@ -48,15 +53,16 @@ public class RestStockService extends AbstractStockService {
             List<StockQuote> list = parseJson(resultsString, symbol);
             if(!list.isEmpty()){
                 return list.get(0);
+            } else {
+                throw new StockServiceException("There is no stock data for: " + symbol);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            throw new StockServiceException(exception.getMessage(), exception);
         }
-
-        return null;
     }
 
     @Override
+    @NotNull
     public List<StockQuote> getQuote(String symbol, LocalDateTime from, LocalDateTime until, IntervalEnum interval) throws StockServiceException {
         LocalDateTime adjustedFrom = from.minusDays(5);
         String fromStr = adjustedFrom.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
@@ -89,27 +95,29 @@ public class RestStockService extends AbstractStockService {
                         + " for the selected date range.");
             }
             return getListByInterval(stockQuotes, from, until, interval);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            throw new StockServiceException(exception.getMessage(), exception);
         }
-
-        return new ArrayList<StockQuote>();
     }
 
-    private List<StockQuote> parseJson(String json, String symbol){
+    private List<StockQuote> parseJson(String json, String symbol) throws StockServiceException {
         List<StockQuote> quotes = new ArrayList<>();
-        JSONObject topLevel = new JSONObject(json);
-        System.out.println(topLevel.toString(4));
-        JSONObject resultData = topLevel.getJSONObject("result_data");
-        JSONArray jsonArray = resultData.getJSONArray(symbol);
-        for(int i = 0 ; i < jsonArray.length(); i++) {
-            JSONObject dayData = jsonArray.getJSONObject(i);
-            BigDecimal price = BigDecimal.valueOf(dayData.getDouble("close"));
-            String day = dayData.getString("date") + " 00:00:00";
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime time = LocalDateTime.parse(day, formatter);
-            StockQuote quote = new StockQuote(symbol, price, time);
-            quotes.add(quote);
+        try {
+            JSONObject topLevel = new JSONObject(json);
+//        System.out.println(topLevel.toString(4));
+            JSONObject resultData = topLevel.getJSONObject("result_data");
+            JSONArray jsonArray = resultData.getJSONArray(symbol);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject dayData = jsonArray.getJSONObject(i);
+                BigDecimal price = BigDecimal.valueOf(dayData.getDouble("close"));
+                String day = dayData.getString("date") + " 00:00:00";
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime time = LocalDateTime.parse(day, formatter);
+                StockQuote quote = new StockQuote(symbol, price, time);
+                quotes.add(quote);
+            }
+        } catch (JSONException exception){
+            throw new StockServiceException("There is no stock data for: " + symbol);
         }
 
         quotes.sort((o1, o2) -> o1.getDate().compareTo(o2.getDate()));
