@@ -5,15 +5,11 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Scanner;
 
 public class CliUtils {
 
-    /**
-     * Get a Scanner to read input from the console that doesn't close System.in
-     *
-     * @return A Scanner
-     */
     private static Scanner getScanner(){
         return new Scanner(new FilterInputStream(System.in){
             @Override
@@ -21,6 +17,25 @@ public class CliUtils {
                 //do nothing
             }
         });
+    }
+
+    public static Object promptForSelection(String promptText, List<Object> list){
+        int num = 1;
+        for (Object item : list){
+            StringBuilder menuLine = new StringBuilder();
+            menuLine.append(num).append(") ");
+            menuLine.append(item.toString());
+            output(menuLine.toString());
+            num++;
+        }
+
+        int selected = promptForInt(promptText + ": ");
+        int index = selected - 1;
+        if (index >= 0 && index < list.size()) {
+            return list.get(index);
+        } else {
+            return null;
+        }
     }
 
     public static String promptForText(String promptText){

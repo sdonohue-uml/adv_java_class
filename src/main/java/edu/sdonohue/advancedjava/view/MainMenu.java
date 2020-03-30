@@ -1,7 +1,5 @@
 package edu.sdonohue.advancedjava.view;
 
-import static edu.sdonohue.advancedjava.view.CliUtils.*;
-
 public class MainMenu extends AbstractMenu {
 
     public MainMenu(){

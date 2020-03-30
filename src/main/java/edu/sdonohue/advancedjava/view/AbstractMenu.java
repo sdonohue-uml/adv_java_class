@@ -17,11 +17,22 @@ public abstract class AbstractMenu implements Menu {
 
     public void display(){
         active = true;
+        outputHeader();
+        outputMenuItems();
+        doSelection();
+        if (active){
+            display();
+        }
+    }
+
+    private void outputHeader() {
         // Print the header
         output("********************************************");
         output(header, TextAttribute.BLACK_BOLD);
         output("********************************************");
+    }
 
+    private void outputMenuItems() {
         // Print the menu
         for (Map.Entry<Integer, MenuCommand> entry : commands.entrySet()){
             StringBuilder menuLine = new StringBuilder();
@@ -29,17 +40,15 @@ public abstract class AbstractMenu implements Menu {
             menuLine.append(entry.getValue().getMenuText());
             output(menuLine.toString());
         }
+    }
 
-        // Get the users selection
+    private void doSelection() {
+        // Get the users selection and run the matching command
         int selected = promptForInt("Enter the number of your selection: ");
         if (commands.containsKey(selected)){
             commands.get(selected).getCommand().run();
         } else {
             // todo: error
-        }
-
-        if (active){
-            display();
         }
     }
 

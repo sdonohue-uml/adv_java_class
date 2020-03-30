@@ -1,7 +1,5 @@
 package edu.sdonohue.advancedjava.view;
 
-import static edu.sdonohue.advancedjava.view.CliUtils.*;
-
 public class DataSourcesMenu extends AbstractMenu {
 
     public DataSourcesMenu(Menu parent){
