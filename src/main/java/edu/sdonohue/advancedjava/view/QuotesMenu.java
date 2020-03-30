@@ -39,7 +39,19 @@ public class QuotesMenu extends AbstractMenu {
                 QuotesMenu.this.getQuotes();
             }
         }));
-        commands.put(3, new MenuCommand("Return to Main Menu", new Runnable() {
+        commands.put(3, new MenuCommand("Change Data Source", new Runnable() {
+            @Override
+            public void run() {
+                QuotesMenu.this.setDataSource();
+            }
+        }));
+        commands.put(4, new MenuCommand("Upload XML Data", new Runnable() {
+            @Override
+            public void run() {
+                QuotesMenu.this.uploadXml();
+            }
+        }));
+        commands.put(5, new MenuCommand("Return to Main Menu", new Runnable() {
             @Override
             public void run() {
                 QuotesMenu.this.returnToParent();
@@ -58,6 +70,7 @@ public class QuotesMenu extends AbstractMenu {
         try {
             StockQuote quote = StockServiceFactory.getStockService().getQuote(symbol);
             if (quote != null) {
+                result("(Datasource: " + StockServiceFactory.getDataSource() + ")");
                 result(quote.toString());
             } else {
                 result("No Stock Prices found for " + symbol);
@@ -110,6 +123,7 @@ public class QuotesMenu extends AbstractMenu {
             if (quotes == null || quotes.size() == 0){
                 result("No Stock Prices found for " + symbol + " within that date range");
             } else {
+                result("(Datasource: " + StockServiceFactory.getDataSource() + ")");
                 for (StockQuote quote : quotes){
                     result(quote.toString());
                 }
@@ -119,5 +133,21 @@ public class QuotesMenu extends AbstractMenu {
             e.printStackTrace();
         }
 
+    }
+
+    protected void setDataSource(){
+        result("Current Datasource: " + StockServiceFactory.getDataSource());
+        StockServiceFactory.DataSource dataSource = (StockServiceFactory.DataSource) promptForSelection(
+                "Which Datasource would you like to use?",
+                Arrays.asList(StockServiceFactory.DataSource.values()));
+        if (dataSource == null){
+            error("Error reading Datasource selection");
+        } else {
+            StockServiceFactory.setDataSource(dataSource);
+        }
+    }
+
+    protected void uploadXml(){
+        System.out.println("Upload XML Selected");
     }
 }

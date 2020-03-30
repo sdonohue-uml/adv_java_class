@@ -20,19 +20,13 @@ public class MainMenu extends AbstractMenu {
                 MainMenu.this.getQuotesMenu();
             }
         }));
-        commands.put(2, new MenuCommand("Manage Data Sources", new Runnable() {
-            @Override
-            public void run() {
-                MainMenu.this.manageDataSourcesMenu();
-            }
-        }));
-        commands.put(3, new MenuCommand("Add/View Users", new Runnable() {
+        commands.put(2, new MenuCommand("Add/View Users", new Runnable() {
             @Override
             public void run() {
                 MainMenu.this.manageUsersMenu();
             }
         }));
-        commands.put(4, new MenuCommand("Quit", new Runnable() {
+        commands.put(3, new MenuCommand("Quit", new Runnable() {
             @Override
             public void run() {
                 MainMenu.this.returnToParent();
@@ -43,11 +37,6 @@ public class MainMenu extends AbstractMenu {
     protected void getQuotesMenu(){
         Menu quotesMenu = new QuotesMenu(this);
         quotesMenu.display();
-    }
-
-    protected void manageDataSourcesMenu(){
-        Menu dataMenu = new DataSourcesMenu(this);
-        dataMenu.display();
     }
 
     protected void manageUsersMenu(){
