@@ -18,6 +18,6 @@ public class StockServiceFactory {
      */
     @NotNull
     public static StockService getStockService(){
-        return new RestStockService();
+        return new DatabaseStockService();
     }
 }

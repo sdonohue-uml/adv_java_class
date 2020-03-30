@@ -1,59 +1,59 @@
 package edu.sdonohue.advancedjava.view;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
+
+import static edu.sdonohue.advancedjava.view.CliUtils.*;
 
 public abstract class AbstractMenu implements Menu {
-    protected String header;
-    protected Menu parentMenu;
     protected Map<Integer, MenuCommand> commands = new LinkedHashMap<>();
+    protected Menu parentMenu;
+    protected String header;
+    private boolean active = false;
 
     public abstract void initCommands();
 
     public abstract void initHeader();
 
     public void display(){
+        active = true;
         // Print the header
-        System.out.println("********************************************");
-        System.out.println(header);
-        System.out.println("********************************************");
+        output("********************************************");
+        output(header, TextAttribute.BLACK_BOLD);
+        output("********************************************");
 
         // Print the menu
         for (Map.Entry<Integer, MenuCommand> entry : commands.entrySet()){
             StringBuilder menuLine = new StringBuilder();
             menuLine.append(entry.getKey()).append(": ");
             menuLine.append(entry.getValue().getMenuText());
-            System.out.println(menuLine.toString());
+            output(menuLine.toString());
         }
 
         // Get the users selection
-        System.out.println("Enter the number of your selection: ");
-        try (Scanner scanner = new Scanner(System.in)) {
-            int selected = scanner.nextInt();
-            // Run the selected command
-            if (commands.containsKey(selected)){
-                commands.get(selected).getCommand().run();
-            } else {
-                // error
-            }
+        int selected = promptForInt("Enter the number of your selection: ");
+        if (commands.containsKey(selected)){
+            commands.get(selected).getCommand().run();
+        } else {
+            // todo: error
+        }
+
+        if (active){
+            display();
         }
     }
 
     public void returnToParent(){
         if (parentMenu != null){
+            active = false;
             parentMenu.display();
         } else {
-            System.out.println("Are you sure you want to quit? (Y/N)");
-            try (Scanner scanner = new Scanner(System.in)) {
-                String selected = scanner.next();
-                if (selected.toLowerCase().startsWith("y")){
-                    System.exit(0);
-                } else {
-                    display();
-                }
+            String selected = promptForText("Are you sure you want to quit? (Y/N)");
+            if (selected.toLowerCase().startsWith("y")){
+                System.exit(0);
             }
         }
     }
+
+
 }

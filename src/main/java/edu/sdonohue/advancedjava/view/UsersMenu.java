@@ -1,5 +1,7 @@
 package edu.sdonohue.advancedjava.view;
 
+import static edu.sdonohue.advancedjava.view.CliUtils.*;
+
 public class UsersMenu extends AbstractMenu {
 
     public UsersMenu(Menu parent){
@@ -37,11 +39,9 @@ public class UsersMenu extends AbstractMenu {
 
     public void listUsers(){
         System.out.println("Users List Selected");
-        display();
     }
 
     public void addUser(){
         System.out.println("Add User Selected");
-        display();
     }
 }

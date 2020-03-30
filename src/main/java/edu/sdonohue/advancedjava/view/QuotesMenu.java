@@ -5,7 +5,8 @@ import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
 
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import static edu.sdonohue.advancedjava.view.CliUtils.*;
 
 public class QuotesMenu extends AbstractMenu {
 
@@ -43,29 +44,38 @@ public class QuotesMenu extends AbstractMenu {
     }
 
     public void getQuote(){
-        System.out.println("Enter the Stock Symbol of the Company");
-        try (Scanner scanner = new Scanner(System.in)) {
-            String symbol = scanner.next();
-            if (symbol != null && symbol.length() > 0) {
-                try {
-                    StockQuote quote = StockServiceFactory.getStockService().getQuote(symbol);
-                    if (quote != null) {
-                        System.out.println(quote);
-                    } else {
-                        System.out.println("No Stock Prices found for " + symbol);
-                    }
-                } catch (StockServiceException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("No Stock Symbol entered");
-            }
+        String symbol = promptForText("Enter the Stock Symbol of the Company");
+
+        if (symbol == null || symbol.length() == 0) {
+            error("No Stock Symbol entered");
+            return;
         }
-        display();
+
+        try {
+            StockQuote quote = StockServiceFactory.getStockService().getQuote(symbol);
+            if (quote != null) {
+                result(quote.toString());
+            } else {
+                result("No Stock Prices found for " + symbol);
+            }
+        } catch (StockServiceException e) {
+            // todo: output errors and recover
+            e.printStackTrace();
+        }
+
     }
 
     public void getQuotes(){
-        System.out.println("Get Quotes Selected");
-        display();
+        String symbol = promptForText("Enter the Stock Symbol of the Company");
+        if (symbol == null || symbol.length() == 0) {
+            error("No Stock Symbol entered");
+            return;
+        }
+
+        LocalDateTime startDate = promptForDate("Enter the Start Date (e.g. 1/15/2020)");
+        if (startDate == null){
+
+        }
+
     }
 }

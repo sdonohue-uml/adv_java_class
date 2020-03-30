@@ -1,5 +1,6 @@
 package edu.sdonohue.advancedjava.view;
 
+import static edu.sdonohue.advancedjava.view.CliUtils.*;
 
 public class DataSourcesMenu extends AbstractMenu {
 
@@ -38,12 +39,10 @@ public class DataSourcesMenu extends AbstractMenu {
 
     protected void setDataSource(){
         System.out.println("Set Data Source Selected");
-        display();
     }
 
     protected void uploadXml(){
         System.out.println("Upload XML Selected");
-        display();
     }
 
 }
