@@ -4,6 +4,8 @@ import edu.sdonohue.advancedjava.model.Person;
 import edu.sdonohue.advancedjava.service.userstocks.UserStockServiceException;
 import edu.sdonohue.advancedjava.service.userstocks.UserStockServiceFactory;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static edu.sdonohue.advancedjava.view.CliUtils.*;
@@ -61,6 +63,33 @@ public class UsersMenu extends AbstractMenu {
     }
 
     public void addUser(){
+        String firstName = promptForText("Enter the new User's first name");
+        if (firstName == null || firstName.length() == 0){
+            error("Error reading first name");
+            return;
+        }
 
+        String lastName = promptForText("Enter the new User's last name");
+        if (lastName == null || lastName.length() == 0){
+            error("Error reading last name");
+            return;
+        }
+
+        LocalDateTime birthdate = promptForDate("Enter the User's birthdate");
+        if (birthdate == null){
+            error("Error reading birthdate");
+            return;
+        }
+
+        Person person = new Person();
+        person.setFirstName(firstName);
+        person.setLastName(lastName);
+        person.setBirthDate(Timestamp.valueOf(birthdate));
+        try {
+            UserStockServiceFactory.getInstance().addOrUpdatePerson(person);
+            result(person.toFriendlyString() + " added to database");
+        } catch (UserStockServiceException e) {
+            error("Error adding Person to database");
+        }
     }
 }
