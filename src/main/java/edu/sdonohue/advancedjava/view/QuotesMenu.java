@@ -1,11 +1,19 @@
 package edu.sdonohue.advancedjava.view;
 
 
+import edu.sdonohue.advancedjava.model.Quote;
+import edu.sdonohue.advancedjava.model.QuotesDao;
 import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.service.stocks.StockService;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
+import edu.sdonohue.advancedjava.xmltodb.InvalidXMLException;
+import edu.sdonohue.advancedjava.xmltodb.Stocks;
+import edu.sdonohue.advancedjava.xmltodb.XMLUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -148,6 +156,26 @@ public class QuotesMenu extends AbstractMenu {
     }
 
     protected void uploadXml(){
-        System.out.println("Upload XML Selected");
+        String fileName = promptForText(
+                "Enter the path and filename of the XML file you want to import (e.g. C:\\test\\stock_data.xml)");
+        if (fileName == null || fileName.length() == 0){
+            error("Error reading filename");
+            return;
+        }
+
+        try{
+            File file = new File(fileName);
+            String xml = new String(Files.readAllBytes(file.toPath()));
+            Stocks stocks = XMLUtils.unmarshall(xml, Stocks.class, "/xml/stock_info.xsd");
+            for (Stocks.Quote xmlQuote : stocks.getQuotes()){
+                Quote dbQuote = new Quote(xmlQuote);
+                QuotesDao.updateOrInsertQuote(dbQuote);
+            }
+            result("Added " + stocks.getQuotes().size() + " quotes to the database");
+        } catch (IOException e) {
+            error("XML File not found");
+        } catch (InvalidXMLException e) {
+            error("XML File format is incorrect");
+        }
     }
 }

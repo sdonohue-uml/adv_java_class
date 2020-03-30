@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Models the Person table
@@ -141,5 +142,10 @@ public class Person {
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
                 '}';
+    }
+
+    public String toFriendlyString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
+        return firstName + " " + lastName + " (DOB: " + birthDate.toLocalDateTime().format(formatter) + ")";
     }
 }

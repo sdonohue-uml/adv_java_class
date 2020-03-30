@@ -19,7 +19,7 @@ public class CliUtils {
         });
     }
 
-    public static Object promptForSelection(String promptText, List<Object> list){
+    public static Object promptForSelection(String promptText, List list){
         int num = 1;
         for (Object item : list){
             StringBuilder menuLine = new StringBuilder();

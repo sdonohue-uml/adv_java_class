@@ -1,5 +1,13 @@
 package edu.sdonohue.advancedjava.view;
 
+import edu.sdonohue.advancedjava.model.Person;
+import edu.sdonohue.advancedjava.service.userstocks.UserStockServiceException;
+import edu.sdonohue.advancedjava.service.userstocks.UserStockServiceFactory;
+
+import java.util.List;
+
+import static edu.sdonohue.advancedjava.view.CliUtils.*;
+
 public class UsersMenu extends AbstractMenu {
 
     public UsersMenu(Menu parent){
@@ -36,10 +44,23 @@ public class UsersMenu extends AbstractMenu {
     }
 
     public void listUsers(){
-        System.out.println("Users List Selected");
+        try {
+            List<Person> users = UserStockServiceFactory.getInstance().getPerson();
+            if (users == null || users.size() == 0){
+                result("No Users found");
+                return;
+            }
+//            Person user = (Person) promptForSelection(
+//                    "Enter the number of the User you'd like to view", users);
+            for (Person user : users){
+                result(user.toFriendlyString());
+            }
+        } catch (UserStockServiceException e) {
+            error("Unable to retrieve the Users List");
+        }
     }
 
     public void addUser(){
-        System.out.println("Add User Selected");
+
     }
 }
