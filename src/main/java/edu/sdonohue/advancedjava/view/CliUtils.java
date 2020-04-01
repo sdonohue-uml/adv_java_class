@@ -8,24 +8,75 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Class for standardizing output to and input from the console for use in
+ * a command line interface application.
+ *
+ * @author Sean Donohue
+ */
 public class CliUtils {
 
-    private static Scanner getScanner(){
-        return new Scanner(new FilterInputStream(System.in){
-            @Override
-            public void close() throws IOException {
-                //do nothing
-            }
-        });
+    /**
+     * Outputs prompt text to the console and waits for input from the user that it
+     * then returns as a String.
+     *
+     * @param promptText The prompt text
+     * @return The user's response as a String
+     */
+    public static String promptForText(String promptText){
+        return prompt(promptText);
     }
 
+    /**
+     * Outputs prompt text to the console and waits for input from the user that it
+     * parses and then returns as an int.
+     *
+     * @param promptText The prompt text
+     * @return The user's response as an int
+     */
+    public static int promptForInt(String promptText){
+        String input = prompt(promptText);
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e){
+            return -1;
+        }
+    }
+
+    /**
+     * Outputs prompt text to the console and waits for input from the user that it
+     * parses and then returns as an instance of LocalDateTime. User input must be in
+     * the format MM/dd/uuuu (e.g. 01/30/2020).
+     *
+     * @param promptText The prompt text
+     * @return The user's response as a LocalDateTime
+     */
+    public static LocalDateTime promptForDate(String promptText){
+        String input = prompt(promptText);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu HH:mm:ss");
+        try {
+            String dateTimeString = input + " 00:00:00";
+            return LocalDateTime.parse(dateTimeString, formatter);
+        } catch (DateTimeParseException e){
+            return null;
+        }
+    }
+
+    /**
+     * Outputs a numbered list of options to the console and waits for the user to enter
+     * the corresponding number. The Object selected from the list is returned.
+     *
+     * @param promptText The text instructions to the user
+     * @param list The list of Objects to select from
+     * @return The selected Object
+     */
     public static Object promptForSelection(String promptText, List list){
         int num = 1;
         for (Object item : list){
-            StringBuilder menuLine = new StringBuilder();
-            menuLine.append(num).append(") ");
-            menuLine.append(item.toString());
-            output(menuLine.toString());
+            StringBuilder lineItem = new StringBuilder();
+            lineItem.append(num).append(") ");
+            lineItem.append(item.toString());
+            output(lineItem.toString());
             num++;
         }
 
@@ -38,32 +89,9 @@ public class CliUtils {
         }
     }
 
-    public static String promptForText(String promptText){
-        return prompt(promptText);
-    }
-
-    public static int promptForInt(String promptText){
-        String input = prompt(promptText);
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e){
-            return -1;
-        }
-    }
-
-    public static LocalDateTime promptForDate(String promptText){
-        String input = prompt(promptText);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu HH:mm:ss");
-        try {
-            String dateTimeString = input + " 00:00:00";
-            return LocalDateTime.parse(dateTimeString, formatter);
-        } catch (DateTimeParseException e){
-            return null;
-        }
-    }
-
+    // Outputs text to the console in a standard format and returns the user's response
     private static String prompt(String promptText){
-        output(promptText, TextAttribute.RED_BOLD_BRIGHT);
+        output(promptText, TextStyle.RED_BOLD_BRIGHT);
         String input;
         try (Scanner scanner = getScanner()) {
             input = scanner.next();
@@ -72,33 +100,89 @@ public class CliUtils {
         return input;
     }
 
+    // Returns a Scanner that reads from System.in that doesn't close System.in when it is closed.
+    private static Scanner getScanner(){
+        return new Scanner(new FilterInputStream(System.in){
+            @Override
+            public void close() throws IOException {
+                //do nothing
+            }
+        });
+    }
+
+    /**
+     * Outputs a line of text to the console using blue text on a white background.
+     * Designed to be used as a convenience method for outputting the results of operations
+     * in the UI in a standard format.
+     * Output is prepended with ansi code to set the color and style of the text, and the color
+     * of the background, and appended with the ASCII reset code to return to default values.
+     *
+     * @param resultText The text to output
+     */
     public static void result(String resultText){
-        output(resultText, TextAttribute.BLUE_BOLD_BRIGHT);
+        output(resultText, TextStyle.BLUE_BOLD_BRIGHT);
     }
 
+    /**
+     * Outputs a line of text to the console using blue text on a white background.
+     * Designed to be used as a convenience method for outputting errors in a standard format.
+     * Output is prepended with ansi code to set the color and style of the text, and the color
+     * of the background, and appended with the ASCII reset code to return to default values.
+     *
+     * @param errorText The text to output
+     */
     public static void error(String errorText){
-        output(errorText, TextAttribute.BLUE_BOLD_BRIGHT);
+        output(errorText, TextStyle.BLUE_BOLD_BRIGHT);
     }
 
+    /**
+     * Outputs a line of text to the console using black text on a white background.
+     * Output is prepended with ansi code to set the color and style of the text, and the color
+     * of the background, and appended with the ASCII reset code to return to default values.
+     *
+     * @param line The text to output
+     */
     public static void output(String line){
-        output(line, TextAttribute.BLACK, BackgroundColor.WHITE);
+        output(line, TextStyle.BLACK, BackgroundColor.WHITE);
     }
 
-    public static void output(String line, TextAttribute textAttribute){
-        output(line, textAttribute, BackgroundColor.WHITE);
+    /**
+     * Outputs a line of text to the console using the selected TextStyle on a white background.
+     * Output is prepended with ansi code to set the color and style of the text, and the color
+     * of the background, and appended with the ASCII reset code to return to default values.
+     *
+     * @param line The text to output
+     * @param textStyle The color and style of the text
+     */
+    public static void output(String line, TextStyle textStyle){
+        output(line, textStyle, BackgroundColor.WHITE);
     }
 
-    public static void output(String line, TextAttribute textAttribute, BackgroundColor backgroundColor){
+    /**
+     * Outputs a line of text to the console using the selected TextStyle on the selected BackgroundColor.
+     * Output is prepended with ansi code to set the color and style of the text, and the color
+     * of the background, and appended with the ASCII reset code to return to default values.
+     *
+     * @param line The text to output
+     * @param textStyle The color and style of the text
+     * @param backgroundColor The color of the background.
+     */
+    public static void output(String line, TextStyle textStyle, BackgroundColor backgroundColor){
+        // The ansi code that resets the console output to default text styles and background
         final String RESET = "\u001B[0m";
+
         StringBuilder output = new StringBuilder();
         output.append(BackgroundColor.WHITE.equals(backgroundColor)?"":backgroundColor)
-                .append(TextAttribute.BLACK.equals(textAttribute)?"": textAttribute)
+                .append(TextStyle.BLACK.equals(textStyle)?"": textStyle)
                 .append(line)
                 .append(RESET);
         System.out.println(output.toString());
     }
 
-    public enum TextAttribute {
+    /**
+     * An enum of available text styles to apply to console output.
+     */
+    public enum TextStyle {
         BLACK("\u001B[30m"),
         RED("\u001B[31m"),
         GREEN("\u001B[32m"),
@@ -138,16 +222,24 @@ public class CliUtils {
 
         private String ansiCode;
 
-        TextAttribute(String ansiCode) {
+        TextStyle(String ansiCode) {
             this.ansiCode = ansiCode;
         }
 
+        /**
+         * The ansi code that applies the text style to text that comes after it.
+         *
+         * @return The ansi code.
+         */
         @Override
         public String toString(){
             return ansiCode;
         }
     }
 
+    /**
+     * An enum of available background colors to apply to console output.
+     */
     public enum BackgroundColor{
         BLACK("\u001B[40m"),
         RED("\u001B[41m"),
@@ -174,6 +266,11 @@ public class CliUtils {
             this.ansiCode = ansiCode;
         }
 
+        /**
+         * The ansi code that applies the background color to text that comes after it.
+         *
+         * @return The ansi code.
+         */
         @Override
         public String toString(){
             return ansiCode;

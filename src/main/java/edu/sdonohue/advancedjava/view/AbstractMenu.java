@@ -28,7 +28,7 @@ public abstract class AbstractMenu implements Menu {
     private void outputHeader() {
         // Print the header
         output("********************************************");
-        output(header, TextAttribute.BLACK_BOLD);
+        output(header, TextStyle.BLACK_BOLD);
         output("********************************************");
     }
 
