@@ -13,18 +13,17 @@ import static edu.sdonohue.advancedjava.view.CliUtils.*;
 public class UsersMenu extends AbstractMenu {
 
     public UsersMenu(Menu parent){
+        super();
         this.parentMenu = parent;
-        initCommands();
-        initHeader();
     }
 
     @Override
-    public void initHeader() {
+    protected void initHeader() {
         header = "Manage Users Menu";
     }
 
     @Override
-    public void initCommands() {
+    protected void initCommands() {
         commands.put(1, new MenuCommand("Add a User", new Runnable() {
             @Override
             public void run() {
@@ -45,7 +44,7 @@ public class UsersMenu extends AbstractMenu {
         }));
     }
 
-    public void listUsers(){
+    private void listUsers(){
         try {
             List<Person> users = UserStockServiceFactory.getInstance().getPerson();
             if (users == null || users.size() == 0){
@@ -62,7 +61,7 @@ public class UsersMenu extends AbstractMenu {
         }
     }
 
-    public void addUser(){
+    private void addUser(){
         String firstName = promptForText("Enter the new User's first name");
         if (firstName == null || firstName.length() == 0){
             error("Error reading first name");

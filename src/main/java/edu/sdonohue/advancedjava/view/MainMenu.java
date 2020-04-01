@@ -2,18 +2,13 @@ package edu.sdonohue.advancedjava.view;
 
 public class MainMenu extends AbstractMenu {
 
-    public MainMenu(){
-        initCommands();
-        initHeader();
-    }
-
     @Override
-    public void initHeader() {
+    protected void initHeader() {
         header = "Main Menu";
     }
 
     @Override
-    public void initCommands() {
+    protected void initCommands() {
         commands.put(1, new MenuCommand("Get Quotes", new Runnable() {
             @Override
             public void run() {
@@ -34,12 +29,12 @@ public class MainMenu extends AbstractMenu {
         }));
     }
 
-    protected void getQuotesMenu(){
+    private void getQuotesMenu(){
         Menu quotesMenu = new QuotesMenu(this);
         quotesMenu.display();
     }
 
-    protected void manageUsersMenu(){
+    private void manageUsersMenu(){
         Menu usersMenu = new UsersMenu(this);
         usersMenu.display();
     }

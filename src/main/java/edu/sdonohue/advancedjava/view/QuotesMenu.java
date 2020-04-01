@@ -23,18 +23,17 @@ import static edu.sdonohue.advancedjava.view.CliUtils.*;
 public class QuotesMenu extends AbstractMenu {
 
     public QuotesMenu(Menu parent){
+        super();
         this.parentMenu = parent;
-        initCommands();
-        initHeader();
     }
 
     @Override
-    public void initHeader() {
+    protected void initHeader() {
         header = "Stock Quotes Menu";
     }
 
     @Override
-    public void initCommands() {
+    protected void initCommands() {
         commands.put(1, new MenuCommand("Get a current Quote", new Runnable() {
             @Override
             public void run() {
@@ -67,7 +66,7 @@ public class QuotesMenu extends AbstractMenu {
         }));
     }
 
-    public void getQuote(){
+    private void getQuote(){
         String symbol = promptForText("Enter the Stock Symbol of the Company");
 
         if (symbol == null || symbol.length() == 0) {
@@ -90,7 +89,7 @@ public class QuotesMenu extends AbstractMenu {
 
     }
 
-    public void getQuotes(){
+    private void getQuotes(){
         String symbol = promptForText("Enter the Stock Symbol of the Company");
         if (symbol == null || symbol.length() == 0) {
             error("No Stock Symbol entered");
@@ -143,7 +142,7 @@ public class QuotesMenu extends AbstractMenu {
 
     }
 
-    protected void setDataSource(){
+    private void setDataSource(){
         result("Current Datasource: " + StockServiceFactory.getDataSource());
         StockServiceFactory.DataSource dataSource = (StockServiceFactory.DataSource) promptForSelection(
                 "Which Datasource would you like to use?",
@@ -155,7 +154,7 @@ public class QuotesMenu extends AbstractMenu {
         }
     }
 
-    protected void uploadXml(){
+    private void uploadXml(){
         String fileName = promptForText(
                 "Enter the path and filename of the XML file you want to import (e.g. C:\\test\\stock_data.xml)");
         if (fileName == null || fileName.length() == 0){

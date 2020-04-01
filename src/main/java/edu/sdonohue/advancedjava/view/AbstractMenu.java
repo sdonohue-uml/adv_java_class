@@ -11,9 +11,14 @@ public abstract class AbstractMenu implements Menu {
     protected String header;
     private boolean active = false;
 
-    public abstract void initCommands();
+    public AbstractMenu(){
+        initCommands();
+        initHeader();
+    }
 
-    public abstract void initHeader();
+    protected abstract void initCommands();
+
+    protected abstract void initHeader();
 
     public void display(){
         active = true;
