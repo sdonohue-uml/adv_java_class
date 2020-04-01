@@ -112,7 +112,6 @@ public class RestStockService extends AbstractStockService {
         List<StockQuote> quotes = new ArrayList<>();
         try {
             JSONObject topLevel = new JSONObject(json);
-//        System.out.println(topLevel.toString(4));
             JSONObject resultData = topLevel.getJSONObject("result_data");
             JSONArray jsonArray = resultData.getJSONArray(symbol);
             for (int i = 0; i < jsonArray.length(); i++) {

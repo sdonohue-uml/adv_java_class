@@ -1,12 +1,23 @@
 package edu.sdonohue.advancedjava.view;
 
+/**
+ * The Main Menu of the StocksCliApplication.
+ *
+ * @author Sean Donohue
+ */
 public class MainMenu extends AbstractMenu {
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void initHeader() {
         header = "Main Menu";
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void initCommands() {
         commands.put(1, new MenuCommand("Get Quotes", new Runnable() {
@@ -29,11 +40,13 @@ public class MainMenu extends AbstractMenu {
         }));
     }
 
+    //Menu command to open the Quotes menu
     private void getQuotesMenu(){
         Menu quotesMenu = new QuotesMenu(this);
         quotesMenu.display();
     }
 
+    //Menu command to open the Users menu
     private void manageUsersMenu(){
         Menu usersMenu = new UsersMenu(this);
         usersMenu.display();

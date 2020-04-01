@@ -37,6 +37,9 @@ public class StockServiceFactory {
         return new DatabaseStockService();
     }
 
+    /**
+     * An enumeration of the valid datasource options.
+     */
     public enum DataSource {
         DATABASE("Local Database", DatabaseStockService.class),
         UNIBIT("Online Stock Service", RestStockService.class),
@@ -50,10 +53,20 @@ public class StockServiceFactory {
             this.stockServiceClass = stockServiceClass;
         }
 
+        /**
+         * The Class of the StockService implementation that works with this datasource.
+         *
+         * @return The StockService Class
+         */
         public Class getStockServiceClass() {
             return stockServiceClass;
         }
 
+        /**
+         * A String represenation of the datasource formatted for CLI output.
+         *
+         * @return A formatted String represenation of the datasource
+         */
         @Override
         public String toString(){
             return displayText;

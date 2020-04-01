@@ -7,6 +7,7 @@ import edu.sdonohue.advancedjava.model.StockQuote;
 import edu.sdonohue.advancedjava.service.stocks.StockService;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
+import edu.sdonohue.advancedjava.util.DatabaseConnectionException;
 import edu.sdonohue.advancedjava.xmltodb.InvalidXMLException;
 import edu.sdonohue.advancedjava.xmltodb.Stocks;
 import edu.sdonohue.advancedjava.xmltodb.XMLUtils;
@@ -14,24 +15,42 @@ import edu.sdonohue.advancedjava.xmltodb.XMLUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static edu.sdonohue.advancedjava.view.CliUtils.*;
 
+/**
+ * A menu that displays options related to getting StockQuotes.
+ *
+ * @author Sean Donohue
+ */
 public class QuotesMenu extends AbstractMenu {
 
+    /**
+     * Constructor that creates a QuotesMenu with a parent menu. The
+     * parent menu is displayed when this menu is exited.
+     *
+     * @param parent The parent menu
+     */
     public QuotesMenu(Menu parent){
         super();
         this.parentMenu = parent;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void initHeader() {
         header = "Stock Quotes Menu";
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void initCommands() {
         commands.put(1, new MenuCommand("Get a current Quote", new Runnable() {
@@ -66,6 +85,7 @@ public class QuotesMenu extends AbstractMenu {
         }));
     }
 
+    // Menu command to get a current StockQuote for a company.
     private void getQuote(){
         String symbol = promptForText("Enter the Stock Symbol of the Company");
 
@@ -83,12 +103,15 @@ public class QuotesMenu extends AbstractMenu {
                 result("No Stock Prices found for " + symbol);
             }
         } catch (StockServiceException e) {
-            // todo: output errors and recover
-            e.printStackTrace();
+            if (e.getCause() != null){
+                result(e.getCause().getMessage());
+            }
+            result("No Stock Prices found for " + symbol);
         }
 
     }
 
+    // Menu command to get historical StockQuotes for a company at a given interval across a date range.
     private void getQuotes(){
         String symbol = promptForText("Enter the Stock Symbol of the Company");
         if (symbol == null || symbol.length() == 0) {
@@ -136,12 +159,15 @@ public class QuotesMenu extends AbstractMenu {
                 }
             }
         } catch (StockServiceException e) {
-            // todo: output errors and recover
-            e.printStackTrace();
+            if (e.getCause() != null){
+                result(e.getCause().getMessage());
+            }
+            result("No Stock Prices found for " + symbol);
         }
 
     }
 
+    // Menu command to change the datasource that StockQuote are retrieved from.
     private void setDataSource(){
         result("Current Datasource: " + StockServiceFactory.getDataSource());
         StockServiceFactory.DataSource dataSource = (StockServiceFactory.DataSource) promptForSelection(
@@ -154,6 +180,7 @@ public class QuotesMenu extends AbstractMenu {
         }
     }
 
+    // Menu command to upload an XML file of StockQuotes to the database.
     private void uploadXml(){
         String fileName = promptForText(
                 "Enter the path and filename of the XML file you want to import (e.g. C:\\test\\stock_data.xml)");

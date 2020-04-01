@@ -10,18 +10,35 @@ import java.util.List;
 
 import static edu.sdonohue.advancedjava.view.CliUtils.*;
 
+/**
+ * A menu that displays options related to users of the stock quote application.
+ *
+ * @author Sean Donohue
+ */
 public class UsersMenu extends AbstractMenu {
 
+    /**
+     * Constructor that creates a UsersMenu with a parent menu. The
+     * parent menu is displayed when this menu is exited.
+     *
+     * @param parent The parent menu
+     */
     public UsersMenu(Menu parent){
         super();
         this.parentMenu = parent;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void initHeader() {
         header = "Manage Users Menu";
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void initCommands() {
         commands.put(1, new MenuCommand("Add a User", new Runnable() {
@@ -44,6 +61,7 @@ public class UsersMenu extends AbstractMenu {
         }));
     }
 
+    // Menu command for displaying a list of users.
     private void listUsers(){
         try {
             List<Person> users = UserStockServiceFactory.getInstance().getPerson();
@@ -61,6 +79,7 @@ public class UsersMenu extends AbstractMenu {
         }
     }
 
+    // Menu command for adding a new user.
     private void addUser(){
         String firstName = promptForText("Enter the new User's first name");
         if (firstName == null || firstName.length() == 0){
