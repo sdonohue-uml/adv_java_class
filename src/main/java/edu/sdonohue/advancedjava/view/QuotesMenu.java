@@ -175,6 +175,7 @@ public class QuotesMenu extends AbstractMenu {
 
     }
 
+    // Prompt the user to see if they want to save online stock results to the database
     private boolean promptToSave(){
         boolean save = false;
         String response = promptForText("Do you want to save this data to the database? (Y/N)");
@@ -185,6 +186,7 @@ public class QuotesMenu extends AbstractMenu {
     }
 
 
+    // Save a list of StockQuotes to the database
     private void saveQuotes(List<StockQuote> quotes){
         if (quotes != null){
             for (StockQuote quote : quotes){
@@ -193,6 +195,7 @@ public class QuotesMenu extends AbstractMenu {
         }
     }
 
+    // Save a StockQuote to the database
     private void saveQuote(StockQuote quote){
         Quote dbQuote = new Quote(quote);
         boolean saved = QuotesDao.updateOrInsertQuote(dbQuote);
