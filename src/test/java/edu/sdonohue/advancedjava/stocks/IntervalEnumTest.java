@@ -4,10 +4,9 @@ import edu.sdonohue.advancedjava.service.stocks.StockService.IntervalEnum;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,25 +17,19 @@ import static org.junit.Assert.assertEquals;
  * @version 1.2
  */
 public class IntervalEnumTest {
-    private Calendar startDate; //12/31/2019 12:00am
+    private LocalDateTime startDate; //12/31/2019 12:00am
 
     @Before
     public void setup(){
-        startDate = Calendar.getInstance();
-        startDate.clear();
-        startDate.set(2019, Calendar.DECEMBER, 31);
+        startDate = LocalDateTime.of(2019, Month.DECEMBER, 31, 0, 0, 0);
     }
 
-    private void advanceTest(IntervalEnum interval, int year, int month, int day, int hour){
-        interval.advance(startDate);
-        Calendar expected = Calendar.getInstance();
-        expected.clear();
-        expected.set(year, month, day, hour,0, 0);
-        Date expectedAsDate = expected.getTime();
-        Date actualAsDate = startDate.getTime();
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-        assertEquals(interval.toString() + " should advance date to " + dateFormat.format(expectedAsDate) +
-                        " but is " + dateFormat.format(actualAsDate), 0, startDate.compareTo(expected));
+    private void advanceTest(IntervalEnum interval, int year, Month month, int day, int hour){
+        LocalDateTime actual = interval.advance(startDate);
+        LocalDateTime expected = LocalDateTime.of(year, month, day, hour, 0, 0);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss");
+        assertEquals(interval.toString() + " should advance date to " + expected.format(formatter) +
+                        " but is " + actual.format(formatter), 0, actual.compareTo(expected));
     }
 
     /**
@@ -44,7 +37,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceHourly(){
-        advanceTest(IntervalEnum.HOURLY, 2019, 11, 31, 1);
+        advanceTest(IntervalEnum.HOURLY, 2019, Month.DECEMBER, 31, 1);
     }
 
     /**
@@ -52,7 +45,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceDaily(){
-        advanceTest(IntervalEnum.DAILY, 2020, 0, 1, 0);
+        advanceTest(IntervalEnum.DAILY, 2020, Month.JANUARY, 1, 0);
     }
 
     /**
@@ -60,7 +53,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceWeekly(){
-        advanceTest(IntervalEnum.WEEKLY, 2020, 0, 7, 0);
+        advanceTest(IntervalEnum.WEEKLY, 2020, Month.JANUARY, 7, 0);
     }
 
     /**
@@ -68,7 +61,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceBiWeekly(){
-        advanceTest(IntervalEnum.BI_WEEKLY, 2020, 0, 14, 0);
+        advanceTest(IntervalEnum.BI_WEEKLY, 2020, Month.JANUARY, 14, 0);
     }
 
     /**
@@ -76,7 +69,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceMonthly(){
-        advanceTest(IntervalEnum.MONTHLY, 2020, 0, 31, 0);
+        advanceTest(IntervalEnum.MONTHLY, 2020, Month.JANUARY, 31, 0);
     }
 
     /**
@@ -84,7 +77,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceBiMonthly(){
-        advanceTest(IntervalEnum.BI_MONTHLY, 2020, 1, 29, 0);
+        advanceTest(IntervalEnum.BI_MONTHLY, 2020, Month.FEBRUARY, 29, 0);
     }
 
     /**
@@ -92,7 +85,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceSemiAnnually(){
-        advanceTest(IntervalEnum.SEMI_ANNUALLY, 2020, 5, 30, 0);
+        advanceTest(IntervalEnum.SEMI_ANNUALLY, 2020, Month.JUNE, 30, 0);
     }
 
     /**
@@ -100,7 +93,7 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceAnnually(){
-        advanceTest(IntervalEnum.ANNUALLY, 2020, 11, 31, 0);
+        advanceTest(IntervalEnum.ANNUALLY, 2020, Month.DECEMBER, 31, 0);
     }
 
     /**
@@ -108,6 +101,6 @@ public class IntervalEnumTest {
      */
     @Test
     public void testAdvanceBiAnnually(){
-        advanceTest(IntervalEnum.BI_ANNUALLY, 2021, 11, 31, 0);
+        advanceTest(IntervalEnum.BI_ANNUALLY, 2021, Month.DECEMBER, 31, 0);
     }
 }
