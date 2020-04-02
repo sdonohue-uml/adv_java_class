@@ -7,8 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ import java.util.List;
  * @author Sean Donohue
  * @version 1.2
  */
-public class BasicStockService implements StockService {
+public class BasicStockService extends AbstractStockService {
 
     /**
      * @inheritDoc
@@ -26,7 +24,7 @@ public class BasicStockService implements StockService {
     @Override
     @Nullable
     public StockQuote getQuote(@NotNull String symbol) {
-        return generateQuote(symbol, Calendar.getInstance());
+        return generateQuote(symbol, LocalDateTime.now());
     }
 
     /**
@@ -34,21 +32,17 @@ public class BasicStockService implements StockService {
      */
     @Override
     @NotNull
-    public List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
+    public List<StockQuote> getQuote(@NotNull String symbol, @NotNull LocalDateTime from, @NotNull LocalDateTime until,
                                      @NotNull IntervalEnum interval) {
         List<StockQuote> stocks = new LinkedList<>();
-        for (Calendar timeOfQuote = (Calendar)from.clone(); !timeOfQuote.after(until); interval.advance(timeOfQuote)){
+        for (LocalDateTime timeOfQuote = from.plusDays(0); !timeOfQuote.isAfter(until); timeOfQuote = interval.advance(timeOfQuote)){
             stocks.add(generateQuote(symbol, timeOfQuote));
         }
         return stocks;
     }
 
     //Utility method for generating StockQuotes for testing
-    private StockQuote generateQuote(String symbol, Calendar date){
-        LocalDateTime dateAsLDT = LocalDateTime.now();
-        if (date != null){
-            dateAsLDT = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        }
-        return new StockQuote(symbol,new BigDecimal("12.34"), dateAsLDT);
+    private StockQuote generateQuote(String symbol, LocalDateTime date){
+        return new StockQuote(symbol,new BigDecimal("12.34"), date);
     }
 }

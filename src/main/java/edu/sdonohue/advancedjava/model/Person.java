@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Models the Person table
@@ -133,6 +134,11 @@ public class Person {
         return result;
     }
 
+    /**
+     * String representation of the instance including all fields.
+     *
+     * @return A String representation of the instance
+     */
     @Override
     public String toString() {
         return "Person{" +
@@ -141,5 +147,15 @@ public class Person {
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
                 '}';
+    }
+
+    /**
+     * String representation of the instance that is formatted for CLI output.
+     *
+     * @return A formatted String representation of the instance
+     */
+    public String toFriendlyString(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu");
+        return firstName + " " + lastName + " (DOB: " + birthDate.toLocalDateTime().format(formatter) + ")";
     }
 }

@@ -3,7 +3,8 @@ package edu.sdonohue.advancedjava.service.stocks;
 import edu.sdonohue.advancedjava.model.StockQuote;
 import org.jetbrains.annotations.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public interface StockService {
      * @return a list of StockQuote instances. One for each day in the range specified.
      */
     @NotNull
-    List<StockQuote> getQuote(@NotNull String symbol, @NotNull Calendar from, @NotNull Calendar until,
+    List<StockQuote> getQuote(@NotNull String symbol, @NotNull LocalDateTime from, @NotNull LocalDateTime until,
                               @NotNull IntervalEnum interval) throws StockServiceException;
 
 
@@ -40,34 +41,33 @@ public interface StockService {
      * Enumeration of the valid intervals between StockQuotes
      */
     enum IntervalEnum{
-        HOURLY(Calendar.HOUR_OF_DAY, 1),
-        DAILY(Calendar.DAY_OF_YEAR, 1),
-        WEEKLY(Calendar.WEEK_OF_YEAR, 1),
-        BI_WEEKLY(Calendar.WEEK_OF_YEAR, 2),
-        MONTHLY(Calendar.MONTH, 1),
-        BI_MONTHLY(Calendar.MONTH, 2),
-        SEMI_ANNUALLY(Calendar.MONTH, 6),
-        ANNUALLY(Calendar.YEAR, 1),
-        BI_ANNUALLY(Calendar.YEAR, 2);
+        HOURLY(1, ChronoUnit.HOURS),
+        DAILY(1, ChronoUnit.DAYS),
+        WEEKLY(1, ChronoUnit.WEEKS),
+        BI_WEEKLY(2, ChronoUnit.WEEKS),
+        MONTHLY(1, ChronoUnit.MONTHS),
+        BI_MONTHLY(2, ChronoUnit.MONTHS),
+        SEMI_ANNUALLY(6, ChronoUnit.MONTHS),
+        ANNUALLY(1, ChronoUnit.YEARS),
+        BI_ANNUALLY(2, ChronoUnit.YEARS);
 
-        private final int datePart;
         private final int quantity;
+        private final ChronoUnit chronoUnit;
 
-        IntervalEnum(int datePart, int quantity){
-            this.datePart = datePart;
+        IntervalEnum(int quantity, ChronoUnit chronoUnit){
             this.quantity = quantity;
+            this.chronoUnit = chronoUnit;
         }
 
         /**
-         * Advances the provide Calendar forward by the interval.
+         * Advances the provided LocalDateTime forward by the interval.
          *
          * @param startDate The date to be advanced from
-         * @return A same Calendar object with the advanced date and time
+         * @return A new LocalDateTime object with the advanced date and time
          */
         @NotNull
-        public Calendar advance(@NotNull Calendar startDate) {
-            startDate.add(datePart, quantity);
-            return startDate;
+        public LocalDateTime advance(@NotNull LocalDateTime startDate) {
+            return startDate.plus(quantity, chronoUnit);
         }
 
         /**
@@ -78,7 +78,7 @@ public interface StockService {
         @Override
         public String toString(){
             String name = name();
-            return name.substring(0,1).toUpperCase() + name.substring(1, name.length()).toLowerCase();
+            return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
         }
     }
 }
