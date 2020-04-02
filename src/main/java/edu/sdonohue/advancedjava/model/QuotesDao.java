@@ -62,7 +62,7 @@ public class QuotesDao {
      *
      * @param quote The quote to add or update
      */
-    public static void updateOrInsertQuote(Quote quote){
+    public static boolean updateOrInsertQuote(Quote quote){
         Session session = null;
         Transaction transaction = null;
         try {
@@ -70,6 +70,7 @@ public class QuotesDao {
             transaction = session.beginTransaction();
             session.save(quote);
             transaction.commit();
+            return true;
         } catch (Exception e){
             e.printStackTrace();
             if (transaction != null) {
@@ -78,6 +79,8 @@ public class QuotesDao {
         } finally {
             session.close();
         }
+
+        return false;
     }
 
     /**

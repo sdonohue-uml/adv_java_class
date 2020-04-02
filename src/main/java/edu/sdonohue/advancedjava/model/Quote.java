@@ -55,6 +55,21 @@ public class Quote {
     }
 
     /**
+     * Creates a Quote instance suitable for adding to the database from a StockQuote instance
+     * which was downloaded from an online stock service.
+     *
+     * @param stockQuote The StockQuote to copy
+     */
+    public Quote(StockQuote stockQuote){
+        if (stockQuote == null){
+            throw new NullPointerException("StockQuote cannot be null");
+        }
+        this.symbol = stockQuote.getCompanySymbol();
+        this.price = stockQuote.getPrice();
+        this.time = Timestamp.valueOf(stockQuote.getDate());
+    }
+
+    /**
      * Creates a quote instance from String values. Used for testing only.
      *
      * @param symbol The symbol (e.g. "GOOG")

@@ -8,6 +8,7 @@ import edu.sdonohue.advancedjava.service.stocks.StockService;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceException;
 import edu.sdonohue.advancedjava.service.stocks.StockServiceFactory;
 import edu.sdonohue.advancedjava.util.DatabaseConnectionException;
+import edu.sdonohue.advancedjava.util.DatabaseUtils;
 import edu.sdonohue.advancedjava.xmltodb.InvalidXMLException;
 import edu.sdonohue.advancedjava.xmltodb.Stocks;
 import edu.sdonohue.advancedjava.xmltodb.XMLUtils;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static edu.sdonohue.advancedjava.service.stocks.StockServiceFactory.*;
 import static edu.sdonohue.advancedjava.view.CliUtils.*;
 
 /**
@@ -95,10 +97,13 @@ public class QuotesMenu extends AbstractMenu {
         }
 
         try {
-            StockQuote quote = StockServiceFactory.getStockService().getQuote(symbol);
+            StockQuote quote = getStockService().getQuote(symbol);
             if (quote != null) {
-                result("(Datasource: " + StockServiceFactory.getDataSource() + ")");
+                result("(Datasource: " + getDataSource() + ")");
                 result(quote.toString());
+                if (getDataSource().equals(DataSource.UNIBIT) && promptToSave()){
+                    saveQuote(quote);
+                }
             } else {
                 result("No Stock Prices found for " + symbol);
             }
@@ -149,13 +154,16 @@ public class QuotesMenu extends AbstractMenu {
         }
 
         try {
-            List<StockQuote> quotes = StockServiceFactory.getStockService().getQuote(symbol, startDate, endDate, interval);
+            List<StockQuote> quotes = getStockService().getQuote(symbol, startDate, endDate, interval);
             if (quotes == null || quotes.size() == 0){
                 result("No Stock Prices found for " + symbol + " within that date range");
             } else {
-                result("(Datasource: " + StockServiceFactory.getDataSource() + ")");
+                result("(Datasource: " + getDataSource() + ")");
                 for (StockQuote quote : quotes){
                     result(quote.toString());
+                }
+                if (getDataSource().equals(DataSource.UNIBIT) && promptToSave()){
+                    saveQuotes(quotes);
                 }
             }
         } catch (StockServiceException e) {
@@ -167,12 +175,38 @@ public class QuotesMenu extends AbstractMenu {
 
     }
 
+    private boolean promptToSave(){
+        boolean save = false;
+        String response = promptForText("Do you want to save this data to the database? (Y/N)");
+        if (response != null && response.toLowerCase().startsWith("y")){
+            save = true;
+        }
+        return save;
+    }
+
+
+    private void saveQuotes(List<StockQuote> quotes){
+        if (quotes != null){
+            for (StockQuote quote : quotes){
+                saveQuote(quote);
+            }
+        }
+    }
+
+    private void saveQuote(StockQuote quote){
+        Quote dbQuote = new Quote(quote);
+        boolean saved = QuotesDao.updateOrInsertQuote(dbQuote);
+        if (saved){
+            result(dbQuote + " saved to database");
+        }
+    }
+
     // Menu command to change the datasource that StockQuote are retrieved from.
     private void setDataSource(){
-        result("Current Datasource: " + StockServiceFactory.getDataSource());
-        StockServiceFactory.DataSource dataSource = (StockServiceFactory.DataSource) promptForSelection(
+        result("Current Datasource: " + getDataSource());
+        DataSource dataSource = (DataSource) promptForSelection(
                 "Which Datasource would you like to use?",
-                Arrays.asList(StockServiceFactory.DataSource.values()));
+                Arrays.asList(DataSource.values()));
         if (dataSource == null){
             error("Error reading Datasource selection");
         } else {
